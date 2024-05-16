@@ -1,148 +1,128 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Jim Zhao's music</title>
+    <title>页面测试</title>
     <style>
-        .main{
-            width:900px;
-            height:200px;
-            background: silver;
-            margin: auto
-        }
-       
         
-        .ysa{
-            
-            width: 900px;
-            height: 200px;
-            bcakground:silver;
-            border-radius: 12px;
-            line-height:15px;
-            font-size:10pt;
-            border-radius:10px 10px 0 0;
-           
-            
-        }
-        body{
-            background: silver;
-        }
-        .ysa img{
-            width:900px;
-            height:400px;
-        }
-        .ysaa{
-            width: 900px;
-            height: 300px;
-            background:silver;
-            
-            line-height:15px;
-            font-size:10pt;
-            border-radius:10px 10px 0 0;
+        .g-app-wrapper {
+            display: flex;
+            min-width: 1200px;
         }
 
-        
-            
-        
-    
-            
-        
-        .ysbb{
-            width:286px;
-            height:230px;
-            border: 2px solid silver;
-            padding: 5px;
-            border-radius: 0 0 10px;
+        .g-sidebar {
+            flex-basis: 250px;
+            margin-right: 10px;
         }
-        .main {
-            width: 200px;
-            height: 200px;
+
+        .g-main {
+            flex-grow: 1;
+        }
+        .g-container {
+            height: 300vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .g-footer {
+            margin-top: auto;
+            flex-shrink: 0;
+            height: 30px;
+            background: deeppink;
+        }
+        .ysa img {
+            width: 1300px;
+            height: 500px;
+        }
+        body {
             background: silver;
         }
-
-        .ysq {
-            width: 200px;
-            height: 140px;
-            font-size: 20px;
-            text-align: center;
-            line-height: 140px;
-        }
-
-        .yst {
-            width: 200px;
-            height: 60px;
-            line-height: 30px;
-            text-align: center;
-        }
-
-        a {
-            text-decoration: none;
-            color: black;
-        }
-
         
-        
+
+
 
     </style>
-</head>
+    </head>
+
+
 <body>
+
+
     <div class="ysa">
-        <img src="TG1.JPG" alt=""
+        <img src="TG2.JPG" alt=""
     </div>
 
     <div class="ysaa">
-        
+
         <div class="ysbb">
 
-            <h3>Piano Teach</h3>
-            <i>Teacher Zhao</i> <br>
-            Piano Teacher one: five finger's train<br>
-            Piano Teacher two: Schmidt<br>
-            Piano Teacher three:  scale arpeggio
+            <h3>钢琴教学</h3>
+            <i>赵老师</i> <br>
+            钢琴教学 五指音阶<br>
+            钢琴教学 什密特<br>
+            钢琴教学 音阶琶音
 
             <hr>
-            <p> First Tempo Finger's standard.</p>
-            <p> Second Tempo raise your finger high</p>
-            <p> Third Tempo finger's rule</p>
+            <p> 第一，速度，标准要求</p>
+            <p> 第二，速度，高抬指</p>
+            <p> 第三，速度，指法</p>
         </div>
     </div>
     <div class="main">
-        <div class="ysa">This website will tell from the technical piano from basic teaching to advanced teaching in some<br>
-        technical problems, how to solve.</div>
-        
-            
+        <div class="ysa">本网站是个人对钢琴的热爱和演奏，对钢琴教学的从零基础到高级阶段的技术分享。</div>
+        <div class="ysb">
 
 
-            
-        
+
+            <a href=""></a><br>
+        </div>
         <a href=""></a>
     </div>
-    <a href="">Click return to top</a><br>
+    
 
     <video width="900" height="360" controls>
         <source src="TG22.mp4" type="video/mp4">
         <source src="video.webm" type="video/webm">
         <source src="video.ogg" type="video/ogg">
     </video>
-        <div class="main">
+
+
+
+
+    <div class="main">
         <div class="ysq"></div>
         <div class="yst">
-            <a href="">《Grand ma's Penghu Bay》</a><br>
-            
+            <a href="TG11.MP4">《Grandma's Penghu Bay》</a><br>
+
         </div>
+        <a href="TG12.MP4">《SUMMER》</a><br>
 
 
     </div>
-         <video width="900" height="360" controls>
-        <source src="TG11.mp4" type="video/mp4">
-        <source src="video.webm" type="video/webm">
-        <source src="video.ogg" type="video/ogg">
-    </video>
 
+    <div class="g-app-wrapper">
+        <!-- 内部内容 -->
+    </div>
 
+    <div class="g-app-wrapper">
+        <div class="g-sidebar"></div>
+        <div class="g-main"></div>
+    </div>
+
+    <div class="g-container">
+        <div class="g-real-box">
+            ...
+        </div>
+        <div class="g-footer"></div>
+    </div>
+    <a href="">点我置顶</a><br>
 
 </body>
+
+
+
+
 </html>
