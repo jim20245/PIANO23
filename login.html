@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <meta
+            name="viewport"
+            content="width=device-width,initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Title</title>
+   
+</head>
+<body>
+
+</body>
+<script type="text/javascript">function password() {
+        var testV = 1; var pass1 = prompt("请输入密码登录网站：")
+    while (testV < 100) {
+        if (pass1) history.go(-1); if (pass1 == "123456") {
+            alert("欢迎回来，密码正确！")
+            window.location.href = "http://www.lovechopin.com"; break;
+        } testV += 1; var pass1 = prompt("密码错误，请重新输入！")
+    } if (pass1 != "password" & testV == 100) history.go(-1); return "";
+    } document.write(password());
+    </script>
+
+</html>
