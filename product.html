@@ -116,10 +116,6 @@
         
        
     </style>
-    </head>
-        
-    <body>
-        
       <!--选项卡内容-->
       <div class="tab-content">
         <div class="tab-pane fade show active" id="pills-home">
@@ -135,90 +131,57 @@
                 </div>
              </div>
             </div>
-            
-            
-            
-              
-                
-                
+    
         
-              
-                
-                
-                    
-                  
-                    
-                  
-                
-             
-          
-          
-       
-       
-       
-        </div>
-        <div class="tab-pane fade" id="pills-profile">
-          <div class="row list">
-            <div class="col-4">
-              <a href="images/007.jpg" class="swipebox" title="2029年">
-                <img src="images/007.jpg" alt="image" class="img-fluid" />
-              </a>
-            </div>
-            <div class="col-4">
-              <a href="images/008.jpg" class="swipebox" title="2029年">
-                <img src="images/008.jpg" alt="image" class="img-fluid" />
-              </a>
-            </div>
-            <div class="col-4">
-              <a href="images/009.jpg" class="swipebox" title="2029年">
-                <img src="images/009.jpg" alt="image" class="img-fluid" />
-              </a>
-            </div>
-            <div class="col-4">
-              <a href="images/014.jpg" class="swipebox" title="2029年">
-                <img src="images/014.jpg" alt="image" class="img-fluid" />
-              </a>
-            </div>
-            <div class="col-4">
-              <a href="images/011.jpg" class="swipebox" title="2029年">
-                <img src="images/011.jpg" alt="image" class="img-fluid" />
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="tab-pane fade" id="pills-contact">
-          <div class="row list">
-            <div class="col-4">
-              <a href="images/012.jpg" class="swipebox" title="2028年">
-                <img src="images/012.jpg" alt="image" class="img-fluid" />
-              </a>
-            </div>
-            <div class="col-4">
-              <a href="images/015.jpg" class="swipebox" title="2028年">
-                <img src="images/015.jpg" alt="image" class="img-fluid" />
-              </a>
-            </div>
-            <div class="col-4">
-              <a href="images/010.jpg" class="swipebox" title="2028年">
-                <img src="images/010.jpg" alt="image" class="img-fluid" />
-              </a>
-            </div>
-            <div class="col-4">
-              <a href="images/013.jpg" class="swipebox" title="2028年">
-                <img src="images/013.jpg" alt="image" class="img-fluid" />
-              </a>
-            </div>
-            <div class="col-4">
-              <a href="images/001.jpg" class="swipebox" title="2028年">
-                <img src="images/001.jpg" alt="image" class="img-fluid" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>
-  <script>
+    <body>
+      
+        <!-- 音乐播放器 -->
+    <audio id="bgMusic" loop>
+        <source src="风.mp3" type="audio/mpeg">
+        <source src="风.mp3" type="audio/ogg">
+    </audio>
+    
+    <div class="music-panel">
+        <button class="music-btn" id="playBtn">▶</button>
+        <input type="range" min="0" max="1" step="0.1" value="0.5" class="volume-slider" id="volumeSlider">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const music = document.getElementById('bgMusic');
+            const playBtn = document.getElementById('playBtn');
+            const volumeSlider = document.getElementById('volumeSlider');
+            
+            // 设置初始音量
+            music.volume = volumeSlider.value;
+            
+            // 音量控制
+            volumeSlider.addEventListener('input', function() {
+                music.volume = this.value;
+            });
+            
+            // 播放/暂停控制
+            playBtn.addEventListener('click', function() {
+                if (music.paused) {
+                    music.play();
+                    playBtn.textContent = '⏸';
+                } else {
+                    music.pause();
+                    playBtn.textContent = '▶';
+                }
+            });
+            
+            // 用户交互后尝试自动播放（提高成功率）
+            document.body.addEventListener('click', function firstInteraction() {
+                music.play().then(() => {
+                    playBtn.textContent = '⏸';
+                }).catch(e => {
+                    console.log('自动播放失败:', e);
+                });
+                document.body.removeEventListener('click', firstInteraction);
+            }, { once: true });
+        });
+    
     // 绑定了.swipebox类
     jQuery(function ($) {
       $('.swipebox').swipebox({
@@ -240,4 +203,5 @@
       })
     })
   </script>
+    </body>
 </html>
