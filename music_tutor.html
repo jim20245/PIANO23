@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>钢琴听音识谱纠错软件</title>
+    <link rel="stylesheet" href="PIANO23-main/bootstrap.min.css">
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #f8f9fa; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        #staff-container { background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 20px; margin-bottom: 20px; }
+        #piano-visualizer { height: 150px; background: #333; border-radius: 8px; margin-bottom: 20px; }
+        .control-panel { display: flex; gap: 10px; margin-bottom: 20px; }
+        .feedback { padding: 15px; border-radius: 8px; margin-top: 20px; display: none; }
+        .correct { background-color: #d4edda; color: #155724; }
+        .incorrect { background-color: #f8d7da; color: #721c24; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/build/cjs/vexflow.js"></script>
+    <script src="https://unpkg.com/aubiojs"></script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">钢琴听音识谱纠错软件</h1>
+        
+        <div class="control-panel">
+            <button id="start-btn" class="btn btn-primary">开始练习</button>
+            <button id="stop-btn" class="btn btn-danger" disabled>停止练习</button>
+            <select id="exercise-select" class="form-select">
+                <option value="simple">简单音阶</option>
+                <option value="intermediate">中级练习</option>
+                <option value="advanced">高级乐曲</option>
+            </select>
+        </div>
+        
+        <div id="staff-container" class="text-center">
+            <!-- 五线谱将在这里渲染 -->
+            <canvas id="staff-canvas" width="1000" height="200"></canvas>
+        </div>
+        
+        <div id="piano-visualizer"></div>
+        
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
