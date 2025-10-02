@@ -184,9 +184,7 @@
     <!-- JavaScript -->
     <script>
 
-        const API_CONFIG = {
-            URL: 'https://piano23-production-d85b.up.railway.app',
-            };
+        
         // 密码显示切换
         document.getElementById('togglePassword').addEventListener('click', function() {
             const passwordInput = document.getElementById('password');
@@ -244,7 +242,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ username, password }),
-                    credentials: 'include' // 允许跨域携带凭证
+                    // 允许跨域携带凭证
                 });
                 
                 console.log('响应状态:', response.status);
