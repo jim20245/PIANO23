@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 
 // 配置静态文件服务
 // 在生产环境中，这可能由前端部署处理，这里保留用于本地开发
-app.use(express.static(path.join(__dirname, '..')));
+app.use(express.static(path.join(__dirname, 'frontend-build')));
 
 // 配置CORS中间件
 
