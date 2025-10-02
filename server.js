@@ -1,4 +1,4 @@
-const cors = require('cors');
+
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
@@ -12,13 +12,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, '..')));
 
 // 配置CORS中间件
-app.use(cors({
-    origin: 'https://piano23-production-d58b.up.railway.app',
-    credentials: true
-}));
-app.post('/login',(req,res)  => {
-    res.json({ success: true, message:'登录成功' });
-});
+
 app.use((req, res, next) => {
     // 在生产环境中应该限制为特定域名
     res.header('Access-Control-Allow-Origin', '*');
