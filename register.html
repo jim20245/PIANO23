@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>用户登录 - Piano</title>
+    <title>用户注册 - Piano</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -52,9 +52,9 @@
             <span class="font-bold text-xl text-neutral">Piano<span class="text-primary">Hub</span></span>
         </div>
         <div class="hidden md:flex space-x-8 items-center">
-            
-            <a href="login.html" class="text-primary font-medium">登录</a>
-            <a href="register.html" class="text-gray-600 hover:text-primary transition-colors">注册</a>
+            <a href="index.html" class="text-gray-600 hover:text-primary transition-colors">首页</a>
+            <a href="login.html" class="text-gray-600 hover:text-primary transition-colors">登录</a>
+            <a href="register.html" class="text-primary font-medium">注册</a>
         </div>
         <button class="md:hidden text-gray-600">
             <i class="fa fa-bars text-xl"></i>
@@ -65,12 +65,12 @@
     <main class="w-full max-w-md">
         <div class="card">
             <div class="text-center mb-8">
-                <h1 class="text-2xl md:text-3xl font-bold text-neutral mb-2">欢迎回来</h1>
-                <p class="text-gray-500">请登录您的账户继续音乐之旅</p>
+                <h1 class="text-2xl md:text-3xl font-bold text-neutral mb-2">创建账户</h1>
+                <p class="text-gray-500">加入我们，开始您的音乐之旅</p>
             </div>
 
-            <!-- 登录表单 -->
-            <form id="loginForm" class="space-y-5">
+            <!-- 注册表单 -->
+            <form id="registerForm" class="space-y-5">
                 <div>
                     <label for="username" class="form-label">用户名</label>
                     <div class="relative">
@@ -110,23 +110,24 @@
                             <i class="fa fa-eye"></i>
                         </button>
                     </div>
+                    <p class="text-xs text-gray-500 mt-1">密码至少包含6个字符</p>
                 </div>
-
-                <!-- 记住我和忘记密码 -->
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
+                
+                <div>
+                    <label for="confirmPassword" class="form-label">确认密码</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                            <i class="fa fa-lock"></i>
+                        </span>
                         <input 
-                            type="checkbox" 
-                            id="rememberMe" 
-                            class="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary"
+                            type="password" 
+                            id="confirmPassword" 
+                            name="confirmPassword" 
+                            required
+                            class="w-full pl-10 py-2.5 border border-gray-300 rounded-lg input-focus"
+                            placeholder="请再次输入密码"
                         >
-                        <label for="rememberMe" class="ml-2 block text-sm text-gray-600">
-                            记住我
-                        </label>
                     </div>
-                    <a href="#" class="text-sm text-primary hover:underline transition-colors">
-                        忘记密码？
-                    </a>
                 </div>
 
                 <!-- 错误消息区域 -->
@@ -137,10 +138,10 @@
 
                 <button 
                     type="submit" 
-                    id="loginButton" 
+                    id="registerButton" 
                     class="btn-primary w-full flex justify-center items-center"
                 >
-                    <span id="buttonText">登录</span>
+                    <span id="buttonText">立即注册</span>
                     <span id="loadingIndicator" class="hidden ml-2">
                         <i class="fa fa-spinner fa-spin"></i>
                     </span>
@@ -149,14 +150,14 @@
 
             <div class="mt-6 text-center">
                 <p class="text-gray-600">
-                    还没有账户？<a href="register.html" class="text-primary font-medium hover:underline">立即注册</a>
+                    已有账户？<a href="login.html" class="text-primary font-medium hover:underline">立即登录</a>
                 </p>
             </div>
         </div>
 
-        <!-- 社交媒体登录选项 -->
+        <!-- 社交媒体注册选项 -->
         <div class="mt-6 text-center">
-            <p class="text-gray-500 mb-4">或通过以下方式登录</p>
+            <p class="text-gray-500 mb-4">或通过以下方式注册</p>
             <div class="flex justify-center space-x-4">
                 <button class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:text-blue-500 hover:border-blue-200 transition-colors">
                     <i class="fa fa-weixin"></i>
@@ -200,7 +201,7 @@
         });
 
         // 表单提交处理
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             // 清空消息
@@ -210,31 +211,36 @@
             // 获取表单数据
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
-            const rememberMe = document.getElementById('rememberMe').checked;
+            const confirmPassword = document.getElementById('confirmPassword').value;
             
             // 前端验证
-            if (!username) {
-                showError('请输入用户名');
+            if (!username || username.length < 3) {
+                showError('用户名至少需要3个字符');
                 return;
             }
             
-            if (!password) {
-                showError('请输入密码');
+            if (!password || password.length < 6) {
+                showError('密码至少需要6个字符');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showError('两次输入的密码不一致');
                 return;
             }
             
             // 显示加载状态
-            const loginButton = document.getElementById('loginButton');
+            const registerButton = document.getElementById('registerButton');
             const buttonText = document.getElementById('buttonText');
             const loadingIndicator = document.getElementById('loadingIndicator');
             
-            loginButton.disabled = true;
-            buttonText.textContent = '登录中';
+            registerButton.disabled = true;
+            buttonText.textContent = '注册中';
             loadingIndicator.classList.remove('hidden');
             
-            try {
-                // 发送登录请求到后端
-                const response = await fetch('http://localhost:3000/login', {
+                try {
+                // 发送注册请求到后端
+                const response = await fetch('http://localhost:3000/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -253,38 +259,30 @@
                 console.log('响应数据:', result);
                 
                 if (result.success) {
-                    // 登录成功，保存用户信息到本地存储
-                    if (rememberMe) {
-                        localStorage.setItem('user', result.user.username);
-                    } else {
-                        sessionStorage.setItem('user', result.user.username);
-                    }
-                    
-                    // 显示成功消息
-                    showSuccess('登录成功！正在跳转到首页...');
-                    
-                    // 跳转到首页
+                    // 注册成功
+                    showSuccess('注册成功！正在跳转到登录页面...');
+                    // 3秒后跳转到登录页
                     setTimeout(() => {
-                        window.location.href = 'copy.html';
-                    }, 1500);
+                        window.location.href = 'login.html';
+                    }, 3000);
                 } else {
-                    // 登录失败
-                    showError(result.message || '登录失败，请检查用户名和密码');
+                    // 注册失败
+                    showError(result.message || '注册失败，请稍后重试');
                 }
             } catch (error) {
                 // 网络错误
-                console.error('登录请求错误详情:', error);
+                console.error('注册请求错误详情:', error);
                 if (error.message.includes('Failed to fetch')) {
-                    showError('无法连接到服务器，请检查服务器是否正常运行');
+                    showError('无法连接到服务器，请检查服务器是否正常运行或网络连接是否稳定');
                 } else if (error.message.includes('Network')) {
                     showError('网络连接中断，请检查您的网络设置');
                 } else {
-                    showError('登录过程中发生错误: ' + error.message);
+                    showError('注册过程中发生错误: ' + error.message);
                 }
             } finally {
                 // 恢复按钮状态
-                loginButton.disabled = false;
-                buttonText.textContent = '登录';
+                registerButton.disabled = false;
+                buttonText.textContent = '立即注册';
                 loadingIndicator.classList.add('hidden');
             }
         });
@@ -298,7 +296,7 @@
             // 滚动到错误消息
             errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
             
-            // 5秒后自动隐藏错误消息
+            // 3秒后自动隐藏错误消息
             setTimeout(() => {
                 errorElement.classList.add('hidden');
             }, 5000);
@@ -322,15 +320,6 @@
             input.addEventListener('blur', function() {
                 this.parentElement.classList.remove('scale-[1.01]');
             });
-        });
-        
-        // 检查是否有记住的用户
-        window.addEventListener('DOMContentLoaded', function() {
-            const savedUser = localStorage.getItem('user');
-            if (savedUser) {
-                document.getElementById('username').value = savedUser;
-                document.getElementById('rememberMe').checked = true;
-            }
         });
     </script>
 </body>
