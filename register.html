@@ -246,6 +246,7 @@
                 // 发送注册请求到后端
                 const response = await fetch('https://piano23-production-d85b.up.railway.app/register', {
                     method: 'POST',
+                    mode: 'cors',
                     headers: {
                         'Content-Type': 'application/json'
                     },
