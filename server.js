@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, '..')));
 
     
 
-app.all('/api/*', function((req, res, next) {
+app.use((req, res, next) => {
     // 在生产环境中应该限制为特定域名
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
