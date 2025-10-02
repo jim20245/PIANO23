@@ -12,11 +12,10 @@ const PORT = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, '..')));
 
 // 配置CORS中间件
-app.all('/api/*', function(req,res,next) {
-    res.header('Access-Control-Allow-Origin', '*')
+
     
 
-app.use((req, res, next) => {
+app.all('/api/*', function((req, res, next) {
     // 在生产环境中应该限制为特定域名
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
