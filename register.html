@@ -185,9 +185,7 @@
     <!-- JavaScript -->
     <script>
 
-        const API_CONFIG = {
-            URL: 'https://piano23-production-d85b.up.railway.app',
-            };
+    
         // 密码显示切换
         document.getElementById('togglePassword').addEventListener('click', function() {
             const passwordInput = document.getElementById('password');
@@ -244,9 +242,8 @@
             
                 try {
                 // 发送注册请求到后端
-                const response = await fetch('https://piano23-production-d85b.up.railway.app/register', {
+                const response = await fetch('https://piano23-production-d85b.up.railway.app/register.html', {
                     method: 'POST',
-                    mode: 'cors',
                     headers: {
                         'Content-Type': 'application/json'
                     },
