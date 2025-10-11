@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>赵科宇钢琴艺术 - 优雅音乐之旅</title>
+    <!-- 引入外部资源 -->
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            background-color: #0a0a0a;
+            color: #f8f9fa;
+        }
+        
+        /* 钢琴渐变背景 */
+        .piano-bg {
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #0f0f0f 100%);
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* 视频背景 */
+        #pianoVideo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 130%;
+            height: 130%;
+            object-fit: cover;
+            opacity: 0.3;
+            z-index: 0;
+            transform: translate(-15%, -15%);
+            animation: gentleFloat 15s ease-in-out infinite alternate;
+        }
+        
+        /* 视频背景摇晃动画 */
+        @keyframes gentleFloat {
+            0% {
+                transform: translate(-15%, -15%) scale(1.1) rotate(-1deg);
+            }
+            50% {
+                transform: translate(-10%, -10%) scale(1.15) rotate(0.5deg);
+            }
+            100% {
+                transform: translate(-20%, -20%) scale(1.05) rotate(-0.5deg);
+            }
+        }
+        
+        /* 音符装饰效果 */
+        .music-notes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .note {
+            position: absolute;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.3);
+            animation: float 15s linear infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.7) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
+        }
+        
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #f8f9fa !important;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+            color: #fff !important;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.7) !important;
+            font-size: 1.1rem;
+            position: relative;
+            margin: 0 10px;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #f8f9fa;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #f8f9fa !important;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* 英雄区域 */
+        .hero-section {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+            padding: 100px 0;
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            background: linear-gradient(to right, #f8f9fa, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.8);
+            animation: fadeInUp 1.2s ease-out;
+        }
+        
+        .btn-piano {
+            background: linear-gradient(135deg, #2c3e50, #1a2530);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #f8f9fa;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn-piano::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+            z-index: -1;
+        }
+        
+        .btn-piano:hover::before {
+            left: 100%;
+        }
+        
+        .btn-piano:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+        
+        /* 商品展示区域 */
+        .products-section {
+            padding: 100px 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            display: inline-block;
+            background: linear-gradient(to right, #f8f9fa, #bdc3c7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, #2c3e50, #1a2530);
+            border-radius: 3px;
+        }
+        
+        /* 商品卡片 */
+        .product-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            position: relative;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #c0392b, #e74c3c);
+        }
+        
+        .product-image {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+        
+        .product-info {
+            padding: 25px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #f8f9fa;
+            transition: color 0.3s ease;
+        }
+        
+        .product-card:hover .product-title {
+            color: #fff;
+        }
+        
+        .product-description {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            flex: 1;
+        }
+        
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+        
+        .product-action {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn-product {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #f8f9fa;
+            padding: 8px 20px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .btn-product:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            color: #fff;
+        }
+        
+        /* 动态图片展示区 */
+        .gallery-section {
+            padding: 100px 0;
+            position: relative;
+            z-index: 1;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            height: 300px;
+            cursor: pointer;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease, filter 0.7s ease;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1) rotate(2deg);
+            filter: brightness(1.2);
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .gallery-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #f8f9fa;
+            margin-bottom: 10px;
+        }
+        
+        .gallery-description {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        /* 特点展示 */
+        .features-section {
+            padding: 100px 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.5s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #e74c3c;
+            transition: transform 0.5s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.2) rotate(15deg);
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #f8f9fa;
+        }
+        
+        .feature-description {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* 页脚 */
+        .footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 50px 0;
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            text-align: center;
+        }
+        
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f8f9fa;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .footer-links li {
+            margin: 0 15px;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #f8f9fa;
+        }
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            margin: 0 10px;
+            color: #f8f9fa;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .social-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+            
+            .product-card {
+                margin-bottom: 30px;
+            }
+            
+            .gallery-item {
+                height: 250px;
+            }
+            
+            .feature-card {
+                margin-bottom: 30px;
+                padding: 30px;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .footer-links li {
+                margin: 10px 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .gallery-item {
+                height: 200px;
+            }
+            
+            .feature-card {
+                padding: 20px;
+            }
+            
+            .feature-icon {
+                font-size: 2.5rem;
+            }
+            
+            .feature-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+        <!-- 音频背景 -->
+        <audio id="backgroundMusic" loop>
+            <source src="piano_background_music.mp3" type="audio/mpeg">
+            您的浏览器不支持音频元素。
+       </audio>
+        
+        <!-- 音频播放控制 -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('DOM 已加载，准备音频控制');
+                const audio = document.getElementById('backgroundMusic');
+                console.log('找到音频元素:', audio);
+                
+                // 当用户点击页面时播放音频
+                document.addEventListener('click', function() {
+                    console.log('页面被点击，尝试播放音频');
+                    if (audio) {
+                        console.log('音频元素存在，当前状态:', audio.paused ? '已暂停' : '播放中');
+                        if (audio.paused) {
+                            audio.play().then(() => {
+                                console.log('音频播放成功！');
+                            }).catch(error => {
+                                console.log('音频播放失败:', error);
+                                alert('音频播放失败: ' + error.message);
+                            });
+                        }
+                    } else {
+                        console.log('未找到音频元素！');
+                    }
+                });
+            });
+        </script>
+        
+        <!-- 钢琴背景和音符装饰 -->
+        <div class="piano-bg">
+            <!-- 视频背景 -->
+            <video id="pianoVideo" loop autoplay muted playsinline>
+                <source src="piano_background.mp4" type="video/mp4">
+                您的浏览器不支持HTML5视频。
+            </video>
+        <div class="music-notes" id="musicNotes"></div>
+        
+        <!-- 导航栏 -->
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <i class="fa fa-music"></i> 赵科宇钢琴艺术
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">首页</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#products">钢琴系列</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#gallery">作品展示</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#features">特色服务</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+       
+        
+        <!-- 英雄区域 -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">聆听殿堂级音乐盛典</h1>
+                    <p class="hero-subtitle">探索世界级钢琴精品，匠心独造</p>
+                    <a href="#products" class="btn btn-piano">
+                        探索课程系列 <i class="fa fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+     
+        
+        <!-- 商品展示区域 -->
+        <section id="products" class="products-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>精选课程系列</h2>
+                </div>
+                
+                <div class="row">
+                    <!-- 商品1 -->
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="y6.jpg" alt="流行钢琴">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">流行钢琴教学</h3>
+                                <p class="product-description">钢琴即兴伴奏课程，短期内掌握流行歌曲的伴奏。</p>
+                                <div class="product-price">¥200</div>
+                                <div class="product-action">
+                                    
+                                    <a href="#" class="btn btn-product">购买礼包</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品2 -->
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="y1.jpg" alt="钢琴教学">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">钢琴教学</h3>
+                                <p class="product-description">初级到高级，入门到深入学习的钢琴课程。</p>
+                                <div class="product-price">¥200</div>
+                                <div class="product-action">
+                                    
+                                    <a href="#" class="btn btn-product">购买礼品</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品3 -->
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="y2.jpg" alt="专业演奏课">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">专业演奏课</h3>
+                                <p class="product-description">肖邦，拉赫玛尼诺夫，李斯特浪漫主义风格特色的课程。</p>
+                                <div class="product-price">¥500</div>
+                                <div class="product-action">
+                                   
+                                    <a href="#" class="btn btn-product">购买礼品</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品4 -->
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="y3.jpg" alt="初学者钢琴">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">新生入学礼包</h3>
+                                <p class="product-description">专为准备音乐之旅的学员准备的丰厚礼包，包括免费试课，名师指导规划，视频答疑，演奏课一节，乐理课一节。</p>
+                                <div class="product-price">¥88</div>
+                                <div class="product-action">
+                                    
+                                    <a href="#" class="btn btn-product">购买礼包</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品5 -->
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="y4.jpg" alt="钢琴课程陪练">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">钢琴陪练课程</h3>
+                                <p class="product-description">专业老师进行优质的线上及线下的一对一陪练纠错，助力学生更好的课后学习。</p>
+                                <div class="product-price">¥150</div>
+                                <div class="product-action">
+                                    
+                                    <a href="#" class="btn btn-product">购买礼品</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品6 -->
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="y5.jpg" alt="少儿素养课">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">少儿素养课</h3>
+                                <p class="product-description">带给少儿不一样的音乐体验之旅，学会更多的五线谱知识，助力演奏新方式。</p>
+                                <div class="product-price">¥140</div>
+                                <div class="product-action">
+                                    
+                                    <a href="#" class="btn btn-product">购买礼品</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+       
+        
+        <!-- 动态图片展示区 -->
+        <section id="gallery" class="gallery-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>钢琴艺术展示</h2>
+                </div>
+                
+                <div class="gallery-container">
+                    <div class="gallery-item">
+                        <img src="C008.jpg" alt="钢琴演奏会">
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">国际钢琴演奏会</h3>
+                            <p class="gallery-description">殿堂级精彩演出，感受音乐的魅力</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item">
+                        <img src="B002.jpg" alt="钢琴成就">
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">中国音乐学院认证</h3>
+                            <p class="gallery-description">庆祝中国音乐学院的认证，为钢琴行业贡献力量</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item">
+                        <img src="C002.jpg" alt="教学经历">
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">丰富的教学经历</h3>
+                            <p class="gallery-description">拥有超过10年的教学经验，为学生提供专业的指导与支持</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item">
+                        <img src="zs1.jpg" alt="教学依赖">
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">专业钢琴证书</h3>
+                            <p class="gallery-description">一对一专业教学，让您快速掌握钢琴演奏技巧</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item">
+                        <img src="zs3.jpg" alt="教学实践">
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">教研活动</h3>
+                            <p class="gallery-description">积极专业的团队教研方案，与日俱静，不断创新。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item">
+                        <img src="zs2.jpg" alt="品牌历史">
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">十年专注品牌</h3>
+                            <p class="gallery-description">权威证书资质，为教学保驾护航</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 特点展示 -->
+        <section id="features" class="features-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>我们的特色服务</h2>
+                </div>
+      
+
+
+
+   
+
+    
+                
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 mb-5">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fa fa-music"></i>
+                            </div>
+                            <h3 class="feature-title">免费提供线上视频指导</h3>
+                            <p class="feature-description">不用担心回家就不会，随时询问线上老师。</p>
+                        </div>
+                    </div>
+
+                    
+                    <div class="col-lg-3 col-md-6 mb-5">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fa fa-wrench"></i>
+                            </div>
+                            <h3 class="feature-title">考级高效通过率</h3>
+                            <p class="feature-description">购买课程包括考级教学的保驾护航，让用户体验一次购买终身享受考级一条龙的考试规划。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6 mb-5">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fa fa-graduation-cap"></i>
+                            </div>
+                            <h3 class="feature-title">专业教学课程</h3>
+                            <p class="feature-description">提供专业的钢琴教学课程，从初学者到高级水平，一对一辅导，让您快速提升演奏技巧。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6 mb-5">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fa fa-shield"></i>
+                            </div>
+                            <h3 class="feature-title">十年品质保证</h3>
+                            <p class="feature-description">所有钢琴教学均是十年专业打磨结果，让您放心购买，安心学习，无后顾之忧。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+
+        
+        
+        <!-- 页脚 -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <i class="fa fa-music"></i> 钢琴艺术
+                    </div>
+
+       
+                    
+                    <ul class="footer-links">
+                        <li><a href="#">首页</a></li>
+                        <li><a href="#products">钢琴系列</a></li>
+                        <li><a href="#gallery">作品展示</a></li>
+                        <li><a href="#features">特色服务</a></li>
+                      
+                        
+                    </ul>
+                    
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fa fa-weibo"></i></a>
+                        <a href="#" class="social-icon"><i class="fa fa-wechat"></i></a>
+                        <a href="#" class="social-icon"><i class="fa fa-qq"></i></a>
+                        <a href="#" class="social-icon"><i class="fa fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fa fa-facebook"></i></a>
+                    </div>
+                    
+                    <div class="copyright">
+                        &copy; 2025 赵科宇钢琴艺术. 保留所有权利.
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- 引入外部脚本 -->
+    <script src="jquery-3.3.1.slim.js"></script>
+    <script src="bootstrap.bundle.js"></script>
+    <script>
+        // 创建漂浮的音符
+        function createMusicNotes() {
+            const notesContainer = document.getElementById('musicNotes');
+            const noteChars = ['♪', '♫', '♬', '♭', '♯'];
+            const colors = ['rgba(255, 255, 255, 0.2)', 'rgba(231, 76, 60, 0.2)', 'rgba(52, 152, 219, 0.2)', 'rgba(46, 204, 113, 0.2)'];
+            
+            // 创建50个音符
+            for (let i = 0; i < 50; i++) {
+                const note = document.createElement('div');
+                note.className = 'note';
+                note.textContent = noteChars[Math.floor(Math.random() * noteChars.length)];
+                
+                // 随机位置
+                note.style.left = `${Math.random() * 100}%`;
+                note.style.top = `${Math.random() * 100}%`;
+                
+                // 随机大小
+                const size = Math.random() * 30 + 10;
+                note.style.fontSize = `${size}px`;
+                
+                // 随机颜色
+                note.style.color = colors[Math.floor(Math.random() * colors.length)];
+                
+                // 随机动画延迟和持续时间
+                note.style.animationDelay = `${Math.random() * 20}s`;
+                note.style.animationDuration = `${Math.random() * 20 + 15}s`;
+                
+                notesContainer.appendChild(note);
+            }
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 创建漂浮音符
+            createMusicNotes();
+            
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // 导航栏滚动效果
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+                    navbar.style.paddingTop = '10px';
+                    navbar.style.paddingBottom = '10px';
+                    navbar.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.3)';
+                } else {
+                    navbar.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                    navbar.style.paddingTop = '15px';
+                    navbar.style.paddingBottom = '15px';
+                    navbar.style.boxShadow = 'none';
+                }
+            });
+            
+            // 为产品卡片添加进入视图动画
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // 处理音频播放 - 等待用户交互后播放
+             
+        
+            
+          
+       
+        
+
+              
+
+
+
+            
+            document.addEventListener('click', function() {
+                const audio = document.getElementById('backgroundMusic');
+                if (audio && audio.paused) {
+                    audio.play().catch(e => {
+                        console.log('音频播放失败:', e);
+                    });
+                }
+            });
+            document.querySelectorAll('.product-card, .feature-card, .gallery-item').forEach(item => {
+                item.style.opacity = 0;
+                item.style.transform = 'translateY(30px)';
+                item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(item);
+            });
+        });
+
+        
+    </script>
+</body>
+</html>
