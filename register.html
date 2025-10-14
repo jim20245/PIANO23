@@ -82,6 +82,7 @@
                             id="username" 
                             name="username" 
                             required
+                            maxlength="9"
                             class="w-full pl-10 py-2.5 border border-gray-300 rounded-lg input-focus"
                             placeholder="请输入用户名"
                         >
@@ -99,6 +100,7 @@
                             id="password" 
                             name="password" 
                             required
+                            maxlength="9"
                             class="w-full pl-10 py-2.5 border border-gray-300 rounded-lg input-focus"
                             placeholder="请输入密码"
                         >
@@ -124,6 +126,7 @@
                             id="confirmPassword" 
                             name="confirmPassword" 
                             required
+                            maxlength="9"
                             class="w-full pl-10 py-2.5 border border-gray-300 rounded-lg input-focus"
                             placeholder="请再次输入密码"
                         >
@@ -214,13 +217,13 @@
             const confirmPassword = document.getElementById('confirmPassword').value;
             
             // 前端验证
-            if (!username || username.length < 3) {
-                showError('用户名至少需要3个字符');
+            if (!username || username.length > 9) {
+                showError('用户名最多需要9个字符');
                 return;
             }
             
-            if (!password || password.length < 6) {
-                showError('密码至少需要6个字符');
+            if (!password || password.length > 9) {
+                showError('密码最多需要9个字符');
                 return;
             }
             
