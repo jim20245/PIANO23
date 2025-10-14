@@ -82,6 +82,7 @@
                             id="username" 
                             name="username" 
                             required
+                            maxlength="9"
                             class="w-full pl-10 py-2.5 border border-gray-300 rounded-lg input-focus"
                             placeholder="请输入用户名"
                         >
@@ -99,6 +100,7 @@
                             id="password" 
                             name="password" 
                             required
+                            maxlength="9"
                             class="w-full pl-10 py-2.5 border border-gray-300 rounded-lg input-focus"
                             placeholder="请输入密码"
                         >
@@ -124,6 +126,7 @@
                             id="confirmPassword" 
                             name="confirmPassword" 
                             required
+                            maxlength="9"
                             class="w-full pl-10 py-2.5 border border-gray-300 rounded-lg input-focus"
                             placeholder="请再次输入密码"
                         >
@@ -184,7 +187,42 @@
 
     <!-- JavaScript -->
     <script>
+        document.getElementById('username').addEventlistener('input',function() {
+            const maxlength = 9;
+            const currentLength = this.value.length;
+            const remainingcharsh = maxLength - currentLength;
 
+            if (currentLength > 3) {
+                this.setAttribute('placeholder',用户名 $｛currentLength}/${maxLength}`);
+        }else{
+            this.setAttribute('placeholder', '请输入用户名（3—9个字符）');
+        }
+        });
+
+        document.getElementById('password').addEventlistener('input',function() {
+            const maxlength = 9;
+            const currentLength = this.value.length;
+            
+
+            if (currentLength >= 1) {
+                this.setAttribute('placeholder',密码 $｛currentLength}/${maxLength}`);
+        }else{
+            this.setAttribute('placeholder', '请输入密码（6—9个字符）');
+        }
+        });
+
+
+               document.getElementById('confirmpassword').addEventlistener('input',function() {
+            const maxlength = 9;
+            const currentLength = this.value.length;
+            
+
+            if (currentLength >= 1) {
+                this.setAttribute('placeholder',确认密码 $｛currentLength}/${maxLength}`);
+        }else{
+            this.setAttribute('placeholder', '请再次输入密码（6—9个字符）');
+        }
+        });
     
         // 密码显示切换
         document.getElementById('togglePassword').addEventListener('click', function() {
@@ -220,9 +258,17 @@
                 showError('用户名至少需要3个字符');
                 return;
             }
+            if (username.length > 9) {
+                showError('用户名不超过9');
+                return;
+            }
             
             if (!password || password.length < 6) {
                 showError('密码至少需要6个字符');
+                return;
+            }
+            if (password.length > 9) {
+                showError('密码不能超过9');
                 return;
             }
             
