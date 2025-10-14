@@ -290,7 +290,7 @@
             
             try {
                 // 发送注册请求到后端（使用相对路径，确保在生产环境中正确工作）
-                const response = await fetch('/register', {
+                const response = await fetch('https://piano23-production-d85b.up.railway.app/register'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
