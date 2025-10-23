@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> 支付成功</title>
+    </head>
+    <body>
+        <div style="text-align: center; padding: 100px;">
+            <h1> 付款成功！</h1>
+            <p>感谢你的购买，正在为你跳转........</p>
+            <div id="countdown">3秒后自动进入注册页面</div>
+
+            <script>
+                let seconds = 3;
+                const countdown = document.getElementById('countdown');
+
+                const timer = setInterval(() => {
+                    seconds--;
+                    countdown.textContent = `${seconds}秒后自动进入注册页面`;
+
+                    if (seconds <= 0) {
+                        clearInterval(timer);
+                        window.location.href = '/register';
+                    }
+                }, 1000);
+            </script>
+
+        </div>
+    </body>
+</html>
