@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户注册 - Piano</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#1E40AF',
+                        accent: '#9333EA',
+                        neutral: '#1F2937',
+                        'base-100': '#FFFFFF',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .input-focus {
+                @apply focus:ring-2 focus:ring-primary/50 focus:border-primary focus:outline-none;
+            }
+            .btn-primary {
+                @apply bg-primary hover:bg-secondary text-white font-semibold py-2 px-6 rounded-lg shadow transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+            }
+            .card {
+                @apply bg-white rounded-xl shadow-lg p-6 md:p-8 border border-gray-100 transition-all duration-300 hover:shadow-xl;
+            }
+            .form-label {
+                @apply block text-sm font-medium text-gray-700 mb-1.5 tracking-wide;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <!-- 顶部导航 -->
+    <nav class="w-full max-w-7xl flex justify-between items-center px-4 py-3 mb-8">
+        <div class="flex items-center space-x-2">
+            <i class="fa fa-music text-primary text-2xl"></i>
+            <span class="font-bold text-xl text-neutral">Piano<span class="text-primary">Hub</span></span>
+        </div>
+        <div class="hidden md:flex space-x-8 items-center">
+            <a href="index.html" class="text-gray-600 hover:text-primary transition-colors">首页</a>
+            <a href="login.html" class="text-gray-600 hover:text-primary transition-colors">登录</a>
+            <a href="register.html" class="text-primary font-medium">注册</a>
+        </div>
+        <button class="md:hidden text-gray-600">
+            <i class="fa fa-bars text-xl"></i>
+        </button>
+    </nav>
+
+    <!-- 主内容 -->
+    <main class="w-full max-w-md">
+        <div class="card">
+            <div class="text-center mb-8">
+                <h1 class="text-2xl md:text-3xl font-bold text-neutral mb-2">创建账户</h1>
+                <p class="text-gray-500">加入我们，开始您的音乐之旅</p>
+            </div>
+
+            <!-- 注册表单 -->
+            <form id="registerForm" class="space-y-5">
+                <div>
+                    <label for="shippingInfo" class="form-label">收货信息</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                            <i class="fa fa-shopping-cart"></i>
+                        </span>
+                        <input 
+                            type="text" 
+                            id="shippingInfo" 
+                            name="shippingInfo" 
+                            required
+                            maxlength="30"
+                            class="w-full pl-10 py-2.5 border border-gray-300 rounded-lg input-focus"
+                            placeholder="请输入收货信息（最多30个字符）"
+                        >
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">输入名称电话和收货地址</p>
+                </div>
+                
+                <div>
+                    <label for="password" class="form-label">密码</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            required
+                            maxlength="9"
+                            class="w-full pl-10 py-2.5 border border-gray-300 rounded-lg input-focus"
+                            placeholder="请输入密码（6-9个字符）"
+                        >
+                        <button 
+                            type="button" 
+                            class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors"
+                            id="togglePassword"
+                        >
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">密码长度为6-9个字符</p>
+                </div>
+                
+                <div>
+                    <label for="confirmPassword" class="form-label">确认密码</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                            <i class="fa fa-lock"></i>
+                        </span>
+                        <input 
+                            type="password" 
+                            id="confirmPassword" 
+                            name="confirmPassword" 
+                            required
+                            maxlength="9"
+                            class="w-full pl-10 py-2.5 border border-gray-300 rounded-lg input-focus"
+                            placeholder="请再次输入密码（6-9个字符）"
+                        >
+                    </div>
+                </div>
+
+                <!-- 错误消息区域 -->
+                <div id="errorMessage" class="hidden bg-red-50 border border-red-200 text-red-600 p-3 rounded-lg text-sm"></div>
+
+                <!-- 成功消息区域 -->
+                <div id="successMessage" class="hidden bg-green-50 border border-green-200 text-green-600 p-3 rounded-lg text-sm"></div>
+
+                <button 
+                    type="submit" 
+                    id="registerButton" 
+                    class="btn-primary w-full flex justify-center items-center"
+                >
+                    <span id="buttonText">立即注册</span>
+                    <span id="loadingIndicator" class="hidden ml-2">
+                        <i class="fa fa-spinner fa-spin"></i>
+                    </span>
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <p class="text-gray-600">
+                    已有账户？<a href="login.html" class="text-primary font-medium hover:underline">立即登录</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- 社交媒体注册选项 -->
+        <div class="mt-6 text-center">
+            <p class="text-gray-500 mb-4">温馨提示：输入完所有信息点击立即注册后，请安心等待物流配送！无需登录</p>
+            <p class="text-gray-500 mb-4">如有疑问请联系我们：19130133027 微信：19130133027 竭诚为您服务！！！</p>
+            <div class="flex justify-center space-x-4">
+                <button class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:text-blue-500 hover:border-blue-200 transition-colors">
+                    <i class="fa fa-weixin"></i>
+                </button>
+                <button class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:text-red-500 hover:border-red-200 transition-colors">
+                    <i class="fa fa-weibo"></i>
+                </button>
+                <button class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:text-blue-700 hover:border-blue-200 transition-colors">
+                    <i class="fa fa-github"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="mt-16 text-center text-gray-500 text-sm">
+        <p>© 2023 PianoHub. 保留所有权利。</p>
+        <div class="mt-2 space-x-4">
+            <a href="#" class="hover:text-primary transition-colors">隐私政策</a>
+            <a href="#" class="hover:text-primary transition-colors">使用条款</a>
+            <a href="#" class="hover:text-primary transition-colors">联系我们</a>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        
+            
+          
+            
+           
+        // HTML转义函数，防止XSS攻击
+        function escapeHTML(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+        
+        // 密码显示切换
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        // 表单提交处理
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // 清空消息
+            document.getElementById('errorMessage').classList.add('hidden');
+            document.getElementById('successMessage').classList.add('hidden');
+            
+            // 获取表单数据
+            const shippingInfo = document.getElementById('shippingInfo').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // 前端验证
+            if (!shippingInfo) {
+                showError('请输入收货信息');
+                return;
+            }
+            
+            if (shippingInfo.length > 30) {
+                showError('收货信息不能超过30个字符');
+                return;
+            }
+            
+            if (!password || password.length < 6) {
+                showError('密码至少需要6个字符');
+                return;
+            }
+            
+            if (password.length > 9) {
+                showError('密码不能超过9个字符');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showError('两次输入的密码不一致');
+                return;
+            }
+            
+            // 显示加载状态
+            const registerButton = document.getElementById('registerButton');
+            const buttonText = document.getElementById('buttonText');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            
+            registerButton.disabled = true;
+            buttonText.textContent = '注册中';
+            loadingIndicator.classList.remove('hidden');
+            
+            try {
+                // 对用户输入进行转义处理，防止XSS攻击
+                const escapedShippingInfo = escapeHTML(shippingInfo);
+                
+                console.log('提交的数据(已转义):', { shippingInfo: escapedShippingInfo, password });
+                
+                // 发送注册请求到后端API（使用相对路径）
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username: escapedShippingInfo, password }) // 仍然使用username字段名以保持与后端兼容
+                });
+                
+                console.log('响应状态:', response.status);
+                
+                // 检查响应状态，处理不同的HTTP错误
+                if (!response.ok) {
+                    // 针对不同的状态码提供更具体的错误信息
+                    switch(response.status) {
+                        case 400:
+                            throw new Error('请求参数错误，请检查输入');
+                        case 409:
+                            throw new Error('用户名已存在');
+                        case 500:
+                            throw new Error('服务器内部错误，请稍后重试');
+                        default:
+                            throw new Error(`服务器响应错误: ${response.status}`);
+                    }
+                }
+                
+                // 确保响应是有效的JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('服务器返回非JSON响应');
+                }
+                
+                const result = await response.json();
+                console.log('响应数据:', result);
+                
+                if (result.success) {
+                    // 注册成功
+                    showSuccess('注册成功！正在跳转到登录页面...');
+                    // 3秒后跳转到登录页
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 3000);
+                } else {
+                    // 注册失败
+                    showError(result.message || '注册失败，请稍后重试');
+                }
+            } catch (error) {
+                // 网络错误或处理错误
+                console.error('注册请求错误详情:', error);
+                
+                // 针对不同类型的错误提供更友好的错误信息
+                if (error.name === 'SyntaxError' && error.message.includes('Unexpected')) {
+                    showError('服务器返回的数据格式错误，请联系管理员');
+                } else if (error.message.includes('Failed to fetch') || error.message.includes('Network')) {
+                    // 网络错误，可能是服务器未启动或连接问题
+                    showError('无法连接到服务器，请稍后再试');
+                } else {
+                    // 其他错误
+                    showError(error.message);
+                }
+            } finally {
+                // 恢复按钮状态
+                registerButton.disabled = false;
+                buttonText.textContent = '立即注册';
+                loadingIndicator.classList.add('hidden');
+            }
+        });
+        
+        // 显示错误消息
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.classList.remove('hidden');
+            
+            // 滚动到错误消息
+            errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // 3秒后自动隐藏错误消息
+            setTimeout(() => {
+                errorElement.classList.add('hidden');
+            }, 5000);
+        }
+        
+        // 显示成功消息
+        function showSuccess(message) {
+            const successElement = document.getElementById('successMessage');
+            successElement.textContent = message;
+            successElement.classList.remove('hidden');
+        }
+        
+        // 添加输入动画效果
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('scale-[1.01]');
+                this.parentElement.style.transition = 'transform 0.2s ease';
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('scale-[1.01]');
+            });
+        });
+    </script>
+</body>
+</html>
