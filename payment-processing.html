@@ -73,8 +73,8 @@
     <div class="processing-container">
         <div class="spinner"></div>
         <h2 id="statusTitle">订单处理中</h2>
-        <p id="statusMessage">请在时间内完成付款......</p>
-        <p id="countdownText" class="text-sm text-muted">10秒后自动确认支付状态...</p>
+        <p id="statusMessage">请在时间内完成付款.....</p>
+        <p id="countdownText" class="text-sm text-muted">100秒后自动确认支付状态...</p>
         
         <div class="success-note" id="successNote">
             <p class="mb-0 text-sm text-danger">重要提示：请保留此页面不要关闭，以便付款完成后回到此页面进行发货！！！</p>
@@ -96,7 +96,7 @@
     <script src="bootstrap.bundle.js"></script>
     <script>
         // 120秒后自动提示完成支付
-         let countdown = 10;
+         let countdown = 100;
         // 添加支付完成状态标志
         let paymentCompleted = false;
         
