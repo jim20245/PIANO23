@@ -103,7 +103,7 @@ class AIChat {
                 right: 30px;
                 width: 350px;
                 max-height: 500px;
-                background: white;
+                background: black;
                 border-radius: 15px;
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
                 overflow: hidden;
@@ -436,4 +436,5 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
         new AIChat();
     }, 1000);
+
 });
