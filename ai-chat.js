@@ -119,7 +119,7 @@ class AIChat {
 
             .ai-chat-header {
                 background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-                color: white;
+                color: black;
                 padding: 15px 20px;
                 display: flex;
                 justify-content: space-between;
@@ -142,7 +142,7 @@ class AIChat {
             .ai-chat-btn {
                 background: rgba(255, 255, 255, 0.2);
                 border: none;
-                color: white;
+                color: black;
                 width: 24px;
                 height: 24px;
                 border-radius: 50%;
@@ -167,7 +167,7 @@ class AIChat {
                 flex: 1;
                 overflow-y: auto;
                 padding: 20px;
-                background: #f8f9fa;
+                background: black;
             }
 
             .ai-message,
@@ -194,20 +194,20 @@ class AIChat {
             }
 
             .ai-message .message-content {
-                background: white;
+                background: black;
                 border: 1px solid #e9ecef;
                 border-bottom-left-radius: 4px;
             }
 
             .user-message .message-content {
-                background: #ff6b6b;
-                color: white;
+                background: black;
+                color: black;
                 border-bottom-right-radius: 4px;
             }
 
             .ai-chat-input-container {
                 padding: 15px;
-                background: white;
+                background: black;
                 border-top: 1px solid #e9ecef;
                 display: flex;
                 gap: 10px;
@@ -438,3 +438,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1000);
 
 });
+
