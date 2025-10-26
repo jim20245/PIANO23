@@ -200,7 +200,7 @@ class AIChat {
             }
 
             .user-message .message-content {
-                background: black;
+                background: white;
                 color: black;
                 border-bottom-right-radius: 4px;
             }
@@ -438,5 +438,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1000);
 
 });
+
 
 
