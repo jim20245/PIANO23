@@ -374,12 +374,12 @@ class AIChat {
         }
 
         if (lowerMessage.includes('订餐') || lowerMessage.includes('下单')) {
-            return '您可以在网站上浏览菜品，点击"立即下单"按钮进行订购。如有特殊需求，请联系我们。';
+            return '您可以在网站上浏览菜品，点击"立即下单"按钮进行订购。请按照商品单价进行输入金额，等待订单完成后点击注册输入收货信息点击立即注册就等待物流发货。如有特殊需求，请联系我们19130133027。';
         }
 
         // 营业时间相关
         if (lowerMessage.includes('营业') || lowerMessage.includes('时间')) {
-            return '我们的营业时间是每天10:00-22:00，欢迎随时光临！';
+            return '我们的营业时间是每天8:00-22:00，欢迎随时光临！';
         }
 
         // 地址相关
@@ -401,7 +401,7 @@ class AIChat {
         }
 
         // 默认回复
-        return '感谢您的咨询！我们是专业的川菜餐厅，提供正宗美味的川菜。如果您有具体的问题，请随时告诉我，我会尽力为您解答。';
+        return '感谢您的咨询！我们是专业的美食餐厅，提供正宗美味的招牌菜。如果您有具体的问题，请随时告诉我，我会尽力为您解答。';
     }
 
     toggleMinimize() {
@@ -436,4 +436,5 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => {
         new AIChat();
     }, 1000);
+
 });
