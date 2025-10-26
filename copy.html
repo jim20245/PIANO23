@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>万大姐招牌菜 - 美味佳肴之旅</title>
+    <!-- 引入外部资源 -->
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            background-color: #0a0a0a;
+            color: #f8f9fa;
+        }
+        
+        /* 美食渐变背景 */
+        .food-bg {
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #0f0f0f 100%);
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* 视频背景 */
+        #foodVideo {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 130%;
+            height: 130%;
+            object-fit: cover;
+            opacity: 0.3;
+            z-index: 0;
+            transform: translate(-15%, -15%);
+            animation: gentleFloat 15s ease-in-out infinite alternate;
+        }
+        
+        /* 视频背景摇晃动画 */
+        @keyframes gentleFloat {
+            0% {
+                transform: translate(-15%, -15%) scale(1.1) rotate(-1deg);
+            }
+            50% {
+                transform: translate(-10%, -10%) scale(1.15) rotate(0.5deg);
+            }
+            100% {
+                transform: translate(-20%, -20%) scale(1.05) rotate(-0.5deg);
+            }
+        }
+        
+        /* 食物装饰效果 */
+        .food-decorations {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .food-icon {
+            position: absolute;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.3);
+            animation: float 15s linear infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.7) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
+        }
+        
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #f8f9fa !important;
+            transition: all 0.3s ease;
+        }
+        
+        .user {
+            display: none;
+        }
+        
+        .exit {
+            cursor: pointer;
+        }
+        
+        .navbar-brand:hover {
+            transform: scale(1.05);
+            color: #fff !important;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.7) !important;
+            font-size: 1.1rem;
+            position: relative;
+            margin: 0 10px;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #f8f9fa;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #f8f9fa !important;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* 英雄区域 */
+        .hero-section {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+            padding: 100px 0;
+        }
+        
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            background: linear-gradient(to right, #f8f9fa, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            color: rgba(255, 255, 255, 0.8);
+            animation: fadeInUp 1.2s ease-out;
+        }
+        
+        .btn-food {
+            background: linear-gradient(135deg, #2c3e50, #1a2530);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #f8f9fa;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn-food::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+            z-index: -1;
+        }
+        
+        .btn-food:hover::before {
+            left: 100%;
+        }
+        
+        .btn-food:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            color: #fff;
+        }
+        
+        /* 商品展示区域 */
+        .products-section {
+            padding: 100px 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            display: inline-block;
+            background: linear-gradient(to right, #f8f9fa, #bdc3c7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(to right, #2c3e50, #1a2530);
+            border-radius: 3px;
+        }
+        
+        /* 商品卡片 */
+        .product-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            position: relative;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #c0392b, #e74c3c);
+        }
+        
+        .product-image {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+        
+        .product-info {
+            padding: 25px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #f8f9fa;
+            transition: color 0.3s ease;
+        }
+        
+        .product-card:hover .product-title {
+            color: #fff;
+        }
+        
+        .product-description {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            flex: 1;
+        }
+        
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+        
+        .product-action {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn-product {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #f8f9fa;
+            padding: 8px 20px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .btn-product:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            color: #fff;
+        }
+        
+        /* 动态图片展示区 */
+        .gallery-section {
+            padding: 100px 0;
+            position: relative;
+            z-index: 1;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            height: 300px;
+            cursor: pointer;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease, filter 0.7s ease;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1) rotate(2deg);
+            filter: brightness(1.2);
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .gallery-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #f8f9fa;
+            margin-bottom: 10px;
+        }
+        
+        .gallery-description {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        /* 特点展示 */
+        .features-section {
+            padding: 100px 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.5s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: #e74c3c;
+            transition: transform 0.5s ease;
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.2) rotate(15deg);
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #f8f9fa;
+        }
+        
+        .feature-description {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* 页脚 */
+        .footer {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 50px 0;
+            position: relative;
+            z-index: 1;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content {
+            text-align: center;
+        }
+        
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f8f9fa;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .footer-links li {
+            margin: 0 15px;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #f8f9fa;
+        }
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            margin: 0 10px;
+            color: #f8f9fa;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .social-icon:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+            
+            .product-card {
+                margin-bottom: 30px;
+            }
+            
+            .gallery-item {
+                height: 250px;
+            }
+            
+            .feature-card {
+                margin-bottom: 30px;
+                padding: 30px;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .footer-links li {
+                margin: 10px 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .gallery-item {
+                height: 200px;
+            }
+            
+            .feature-card {
+                padding: 20px;
+            }
+            
+            .feature-icon {
+                font-size: 2.5rem;
+            }
+            
+            .feature-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+        <!-- 音频背景 -->
+        <audio id="backgroundMusic" loop>
+            <source src="" type="audio/mpeg">
+            您的浏览器不支持音频元素。
+       </audio>
+        
+        <!-- 音频播放控制 -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('DOM 已加载，准备音频控制');
+                const audio = document.getElementById('backgroundMusic');
+                console.log('找到音频元素:', audio);
+                
+                // 当用户点击页面时播放音频
+                document.addEventListener('click', function() {
+                    console.log('页面被点击，尝试播放音频');
+                    if (audio) {
+                        console.log('音频元素存在，当前状态:', audio.paused ? '已暂停' : '播放中');
+                        if (audio.paused) {
+                            audio.play().then(() => {
+                                console.log('音频播放成功！');
+                            }).catch(error => {
+                                console.log('音频播放失败:', error);
+                                alert('音频播放失败: ' + error.message);
+                            });
+                        }
+                    } else {
+                        console.log('未找到音频元素！');
+                    }
+                });
+            });
+        </script>
+        
+        <!-- 美食背景和装饰 -->
+        <div class="food-bg">
+            <!-- 视频背景 -->
+            <video id="foodVideo" loop autoplay muted playsinline>
+                <source src="美食.mp4" type="video/mp4">
+                您的浏览器不支持HTML5视频。
+            </video>
+        <div class="food-decorations" id="foodDecorations"></div>
+        
+        <!-- 导航栏 -->
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                        <i class="fa fa-cutlery"></i> 万大姐招牌菜
+                    </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="#">首页</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#products">菜品系列</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#gallery">美食制作展示</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#features">特色服务</a>
+                        </li>
+                        <!-- 用户登录状态 -->
+                        <li class="nav-item" id="userMenu" style="display: none;">
+                            <span class="nav-link user">欢迎，<span id="username">用户</span></span>
+                        </li>
+                        <li class="nav-item" id="userMenu" style="display: none;">
+                            <a class="nav-link exit" href="javascript:void(0)" onclick="logout()">退出登录</a>
+                        </li>
+                        <li class="nav-item" id="loginRegister">
+                            <a class="nav-link" href="login.html"><!--登录--></a>
+                        </li>
+                        <li class="nav-item" id="loginRegister">
+                            <a class="nav-link" href="register.html"><!--注册--></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+       
+        
+        <!-- 英雄区域 -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="hero-content">
+                    <h1 class="hero-title">品味地道招牌菜美食</h1>
+                    <p class="hero-subtitle">精选食材，传统工艺，匠心烹饪</p>
+                    <a href="#products" class="btn btn-food">
+                        探索特色菜品 <i class="fa fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+     
+        
+        <!-- 商品展示区域 -->
+        <section id="products" class="products-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>招牌菜品推荐</h2>
+                </div>
+                
+                <div class="row">
+                    <!-- 商品1 -->
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="美食1.jpg" alt="流行钢琴">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">养生鸡汤</h3>
+                                <p class="product-description">精选农家土鸡，慢火熬制8小时，营养丰富，口感醇厚！</p>
+                                <div class="product-price">¥69</div>
+                                <div class="product-action">
+                                     
+                                    <a href="payment-processing.html" class="btn btn-product">下单品尝</a>
+                                     
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品2 -->
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="美食2.jpg" alt="钢琴教学">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">麻婆豆腐</h3>
+                                <p class="product-description">麻辣鲜香，豆腐嫩滑，正宗川菜经典，让您回味无穷。</p>
+                                <div class="product-price">¥56</div>
+                                <div class="product-action">
+                                     
+                                    <a href="payment-processing.html" class="btn btn-product">下单品尝</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品3 -->
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="美食3.jpg" alt="专业演奏课">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">虫草花炖排骨</h3>
+                                <p class="product-description">精选猪排骨搭配虫草花，滋阴补肾，营养美味又健康。</p>
+                                <div class="product-price">¥59</div>
+                                <div class="product-action">
+                                    
+                                    <a href="payment-processing.html" class="btn btn-product">下单品尝</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品4 -->
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="美食4.jpg" alt="初学者钢琴">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">红烧肉</h3>
+                                <p class="product-description">传统工艺制作，肥而不腻，入口即化，甜咸适中。</p>
+                                <div class="product-price">¥88</div>
+                                <div class="product-action">
+                                     
+                                    <a href="payment-processing.html" class="btn btn-product">下单品尝</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品5 -->
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="美食5.jpg" alt="钢琴课程陪练">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">辣子鸡</h3>
+                                <p class="product-description">精选鸡肉，配以干辣椒炒制，麻辣鲜香，口感酥脆。</p>
+                                <div class="product-price">¥45</div>
+                                <div class="product-action">
+                                 
+                                  <a href="payment-processing.html" class="btn btn-product">下单品尝</a>
+                                 <a href="payment-processing.html" class="btn btn-product">加入收藏</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 商品6 -->
+                    <div class="col-lg-4 col-md-6 mb-5">
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="美食6.jpg" alt="少儿素养课">
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">新品发布</h3>
+                                <p class="product-description">更多特色菜品，持续更新中，敬请期待。</p>
+                                 
+                                <div class="product-action">
+                                     
+                                    <a href="#" class="btn btn-product">查看更多</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+       
+        
+        <!-- 美食图片展示区 -->
+        <section id="gallery" class="gallery-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>美食制作展示</h2>
+                </div>
+                
+                <div class="gallery-container">
+                    <div class="gallery-item">
+                        <img src="美食8.jpg" alt="钢琴演奏会">
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">招牌菜品展示</h3>
+                            <p class="gallery-description">精美摆盘，色香味俱全，视觉与味觉的双重享受</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item">
+                        <img src="美食9.jpg" alt="钢琴成就">
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">专业厨师团队</h3>
+                            <p class="gallery-description">经验丰富的厨师团队，用心烹饪每一道美食</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item">
+                        <img src="美食10.jpg" alt="教学经历">
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">精选优质食材</h3>
+                            <p class="gallery-description">每日新鲜采购，严格筛选，确保菜品品质</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item">
+                        <img src="美食11.jpg" alt="教学依赖">
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">传统烹饪工艺</h3>
+                            <p class="gallery-description">传承经典川菜技艺，保留传统风味</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item">
+                        <img src="美食12.jpg" alt="教学实践">
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">干净整洁厨房</h3>
+                            <p class="gallery-description">严格的卫生标准，让您吃得放心</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item">
+                        <img src="美食1.jpg" alt="品牌历史">
+                        <div class="gallery-overlay">
+                            <h3 class="gallery-title">顾客好评如潮</h3>
+                            <p class="gallery-description">多年来赢得众多顾客的喜爱和好评</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 特点展示 -->
+        <section id="features" class="features-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>我们的美食特色</h2>
+                </div>
+      
+
+
+
+   
+
+    
+                
+                <div class="row">
+                    <div class="col-lg-3 col-md-6 mb-5">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fa fa-leaf"></i>
+                            </div>
+                            <h3 class="feature-title">新鲜食材保证</h3>
+                            <p class="feature-description">每日新鲜采购，严格筛选，确保每一道菜品的品质和口感。</p>
+                        </div>
+                    </div>
+
+                    
+                    <div class="col-lg-3 col-md-6 mb-5">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fa fa-fire"></i>
+                            </div>
+                            <h3 class="feature-title">传统烹饪工艺</h3>
+                            <p class="feature-description">传承百年川菜技艺，结合现代烹饪理念，保留经典风味的同时不断创新。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6 mb-5">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fa fa-truck"></i>
+                            </div>
+                            <h3 class="feature-title">快速配送服务</h3>
+                            <p class="feature-description">提供便捷的外卖配送服务，让您足不出户就能品尝到正宗川菜美食。</p>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-3 col-md-6 mb-5">
+                        <div class="feature-card">
+                            <div class="feature-icon">
+                                <i class="fa fa-certificate"></i>
+                            </div>
+                            <h3 class="feature-title">食品安全保障</h3>
+                            <p class="feature-description">严格的厨房卫生管理，透明的制作过程，让您吃得放心、安心、舒心。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+
+        
+        
+        <!-- 页脚 -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <i class="fa fa-cutlery"></i> 万大姐招牌菜
+                    </div>
+
+       
+                    
+                    <ul class="footer-links">
+                        <li><a href="#">首页</a></li>
+                        <li><a href="#products">菜品系列</a></li>
+                        <li><a href="#gallery">美食制作展示</a></li>
+                        <li><a href="#features">特色服务</a></li>
+                      
+                        
+                    </ul>
+                    
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><i class="fa fa-weibo"></i></a>
+                        <a href="#" class="social-icon"><i class="fa fa-wechat"></i></a>
+                        <a href="#" class="social-icon"><i class="fa fa-qq"></i></a>
+                        <a href="#" class="social-icon"><i class="fa fa-instagram"></i></a>
+                        <a href="#" class="social-icon"><i class="fa fa-facebook"></i></a>
+                    </div>
+                    
+                    <div class="copyright">
+                        &copy; 2001 万大姐招牌菜. 保留所有权利.
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- 引入外部脚本 -->
+    <script src="jquery-3.3.1.slim.js"></script>
+    <script src="bootstrap.bundle.js"></script>
+    <script>
+            // 检查用户登录状态
+            function checkLoginStatus() {
+                const userInfo = localStorage.getItem('userInfo');
+                if (userInfo) {
+                    const user = JSON.parse(userInfo);
+                    document.querySelectorAll('#userMenu').forEach(menu => menu.style.display = 'block');
+                    document.querySelectorAll('#loginRegister').forEach(menu => menu.style.display = 'none');
+                    document.getElementById('username').textContent = user.username || '用户';
+                } else {
+                    document.querySelectorAll('#userMenu').forEach(menu => menu.style.display = 'none');
+                    document.querySelectorAll('#loginRegister').forEach(menu => menu.style.display = 'block');
+                }
+            }
+            
+            // 退出登录
+            function logout() {
+                localStorage.removeItem('userInfo');
+                checkLoginStatus();
+                alert('已退出登录');
+            }
+            
+            // 创建漂浮的食物图标
+            function createFoodDecorations() {
+            const decorationsContainer = document.getElementById('foodDecorations');
+            const foodChars = ['🍜', '🍲', '🍖', '🍗', '🌶️', '🍚', '🥟', '🍤'];
+            const colors = ['rgba(255, 255, 255, 0.2)', 'rgba(231, 76, 60, 0.2)', 'rgba(52, 152, 219, 0.2)', 'rgba(46, 204, 113, 0.2)'];
+            
+            // 创建50个音符
+            for (let i = 0; i < 50; i++) {
+                const decoration = document.createElement('div');
+                decoration.className = 'food-icon';
+                decoration.textContent = foodChars[Math.floor(Math.random() * foodChars.length)];
+                
+                // 随机位置
+                note.style.left = `${Math.random() * 100}%`;
+                note.style.top = `${Math.random() * 100}%`;
+                
+                // 随机大小
+                const size = Math.random() * 30 + 10;
+                note.style.fontSize = `${size}px`;
+                
+                // 随机颜色
+                note.style.color = colors[Math.floor(Math.random() * colors.length)];
+                
+                // 随机动画延迟和持续时间
+                note.style.animationDelay = `${Math.random() * 20}s`;
+                note.style.animationDuration = `${Math.random() * 20 + 15}s`;
+                
+                decorationsContainer.appendChild(decoration);
+            }
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查登录状态
+            checkLoginStatus();
+            // 创建漂浮食物图标
+            createFoodDecorations();
+            
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // 导航栏滚动效果
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 50) {
+                    navbar.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+                    navbar.style.paddingTop = '10px';
+                    navbar.style.paddingBottom = '10px';
+                    navbar.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.3)';
+                } else {
+                    navbar.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                    navbar.style.paddingTop = '15px';
+                    navbar.style.paddingBottom = '15px';
+                    navbar.style.boxShadow = 'none';
+                }
+            });
+            
+            // 为产品卡片添加进入视图动画
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // 处理音频播放 - 等待用户交互后播放
+             
+        
+            
+          
+       
+        
+
+              
+
+
+
+            
+            document.addEventListener('click', function() {
+                const audio = document.getElementById('backgroundMusic');
+                if (audio && audio.paused) {
+                    audio.play().catch(e => {
+                        console.log('音频播放失败:', e);
+                    });
+                }
+            });
+            document.querySelectorAll('.product-card, .feature-card, .gallery-item').forEach(item => {
+                item.style.opacity = 0;
+                item.style.transform = 'translateY(30px)';
+                item.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(item);
+            });
+        });
+
+        
+    </script>
+</body>
+</html>
