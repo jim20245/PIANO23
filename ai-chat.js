@@ -366,42 +366,42 @@ class AIChat {
 
         // 菜品相关回复
         if (lowerMessage.includes('菜单') || lowerMessage.includes('菜品') || lowerMessage.includes('有什么')) {
-            return '我们有多种招牌川菜，包括养生鸡汤、麻婆豆腐、红烧肉、辣子鸡等。您可以在"招牌菜品推荐"栏目查看详情。客服微信：19130133027';
+            return '我们有多种招牌川菜，包括养生鸡汤、麻婆豆腐、红烧肉、辣子鸡等。您可以在"招牌菜品推荐"栏目查看详情。contact:18064908797@163.com';
         }
 
         if (lowerMessage.includes('价格') || lowerMessage.includes('多少钱')) {
-            return '我们的菜品价格从45元到88元不等，具体价格可以查看各个菜品的详情。客服微信：19130133027';
+            return '我们的菜品价格从45元到88元不等，具体价格可以查看各个菜品的详情。contact:18064908797@163.com';
         }
 
         if (lowerMessage.includes('订餐') || lowerMessage.includes('下单')) {
-            return '您可以在网站上浏览菜品，点击"立即下单"按钮进行订购。如有特殊需求，请联系我们。客服微信：19130133027';
+            return '您可以在网站上浏览菜品，点击"立即下单"按钮进行订购。如有特殊需求，请联系我们。contact:18064908797@163.com';
         }
 
         // 营业时间相关
         if (lowerMessage.includes('营业') || lowerMessage.includes('时间')) {
-            return '我们的营业时间是每天10:00-22:00，欢迎随时光临！客服微信：19130133027';
+            return '我们的营业时间是每天10:00-22:00，欢迎随时光临！contact:18064908797@163.com';
         }
 
         // 地址相关
         if (lowerMessage.includes('地址') || lowerMessage.includes('位置')) {
-            return '我们的餐厅位于市中心繁华地段，您可以点击网站底部的联系方式查看详细地址。客服微信：19130133027';
+            return '我们的餐厅位于市中心繁华地段，您可以点击网站底部的联系方式查看详细地址。contact:18064908797@163.com';
         }
 
         // 常见问题
         if (lowerMessage.includes('配送') || lowerMessage.includes('外卖')) {
-            return '是的，我们提供快速配送服务，让您足不出户就能品尝到正宗川菜美食。客服微信：19130133027';
+            return '是的，我们提供快速配送服务，让您足不出户就能品尝到正宗川菜美食。contact:18064908797@163.com';
         }
 
         if (lowerMessage.includes('食材') || lowerMessage.includes('新鲜')) {
-            return '我们承诺所有菜品均使用新鲜食材，每日新鲜采购，严格筛选，确保每一道菜品的品质和口感。客服微信：19130133027';
+            return '我们承诺所有菜品均使用新鲜食材，每日新鲜采购，严格筛选，确保每一道菜品的品质和口感。contact:18064908797@163.com';
         }
 
         if (lowerMessage.includes('辣') || lowerMessage.includes('口味')) {
-            return '我们的川菜有多种辣度可以选择，从微辣到特辣，满足不同顾客的口味需求。您可以在下单时备注您的辣度偏好。客服微信：19130133027';
+            return '我们的川菜有多种辣度可以选择，从微辣到特辣，满足不同顾客的口味需求。您可以在下单时备注您的辣度偏好。contact:18064908797@163.com';
         }
 
         // 默认回复
-        return '感谢您的咨询！我们是专业的川菜餐厅，提供正宗美味的川菜。如果您有具体的问题，请随时告诉我，我会尽力为您解答。客服微信：19130133027';
+        return '感谢您的咨询！我们是专业的川菜餐厅，提供正宗美味的川菜。如果您有具体的问题，请随时告诉我，我会尽力为您解答。contact:18064908797@163.com';
     }
 
     toggleMinimize() {
@@ -438,6 +438,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1000);
 
 });
+
 
 
 
