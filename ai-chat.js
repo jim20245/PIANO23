@@ -32,7 +32,7 @@ class AIChat {
         this.chatContainer.innerHTML = `
             <div class="ai-chat-header">
                 <div class="ai-chat-title">
-                    <i class="fa fa-robot"></i> 美食助手
+                    <i class="fa fa-robot"></i> Tissue
                 </div>
                 <div class="ai-chat-controls">
                     <button id="ai-chat-minimize" class="ai-chat-btn">
@@ -47,12 +47,12 @@ class AIChat {
                 <div class="ai-chat-messages" id="ai-chat-messages">
                     <div class="ai-message">
                         <div class="message-content">
-                            您好！我是您的美食助手。请问有什么可以帮助您的吗？
+                          Welcome I am Tissue, have you any question ask for me?
                         </div>
                     </div>
                 </div>
                 <div class="ai-chat-input-container">
-                    <input type="text" id="ai-chat-input" placeholder="请输入您的问题..." />
+                    <input type="text" id="ai-chat-input" placeholder="input your questions..." />
                     <button id="ai-chat-send" class="ai-chat-send-btn">
                         <i class="fa fa-paper-plane"></i>
                     </button>
@@ -438,6 +438,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1000);
 
 });
+
 
 
 
