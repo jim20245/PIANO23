@@ -102,7 +102,12 @@ app.post('/login', async (req,res)  => {
 
     const user = users.find(u => u.username === username && u.password === password);
 
-    
+    if (!user) {
+        return res.json({
+            success:false,
+            message:'用户不存在'
+        });
+    }
         const isPasswordValid = await bcrypt.compare(password,user.password);
         if (isPasswordValid) {
         res.json({
