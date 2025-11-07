@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const bcrypt = require('bcryptjs');
+
 
 const app = express();
 // 使用环境变量PORT，如果不存在则使用3000
@@ -31,7 +31,7 @@ app.use(express.json());
 
 const USERS_FILE = path.join(__dirname, 'users.json');
 
-app.post('/register', async (req, res) => {
+app.post('/register',(req, res) => {
     
     const { username, password } = req.body;
     
@@ -56,13 +56,13 @@ app.post('/register', async (req, res) => {
             message: '用户名已存在'
         });
     }
-    const saltRounds = 12;
-    const hashedPassword = awaits bcrypt.hash(password, saltRounds);
+    
+    
     
     const newUser = {
         id: users.length + 1,
         username: username,
-        password: hashedPassword,
+        password: password,
         created: new Date().toLocaleString()
     };
     
@@ -77,7 +77,7 @@ app.post('/register', async (req, res) => {
     
 });
 
-app.post('/login', async (req,res)  => {
+app.post('/login',(req,res)  => {
     console.log('收到登录请求：', req.body);
 
     const { username, password } = req.body;
@@ -102,14 +102,7 @@ app.post('/login', async (req,res)  => {
 
     const user = users.find(u => u.username === username && u.password === password);
 
-    if (!user) {
-        return res.json({
-            success:false,
-            message:'用户不存在'
-        });
-    }
-        const isPasswordValid = await bcrypt.compare(password,user.password);
-        if (isPasswordValid) {
+    if (user) {
         res.json({
             success: true,
             message: '登录成功',
