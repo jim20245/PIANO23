@@ -77,7 +77,7 @@ app.post('/register',(req, res) => {
     
 });
 
-app.post('/login',(req,res)  => {
+app.post('/login',async (req,res)  => {
     console.log('收到登录请求：', req.body);
 
     const { username, password } = req.body;
