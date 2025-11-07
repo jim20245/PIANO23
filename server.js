@@ -31,7 +31,7 @@ app.use(express.json());
 
 const USERS_FILE = path.join(__dirname, 'users.json');
 
-app.post('/register',(req, res) => {
+app.post('/register', async (req, res) => {
     
     const { username, password } = req.body;
     
@@ -77,7 +77,7 @@ app.post('/register',(req, res) => {
     
 });
 
-app.post('/login',async (req,res)  => {
+app.post('/login', async (req,res)  => {
     console.log('收到登录请求：', req.body);
 
     const { username, password } = req.body;
