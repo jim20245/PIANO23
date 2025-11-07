@@ -1,6 +1,7 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 // 使用环境变量PORT，如果不存在则使用3000
@@ -55,11 +56,13 @@ app.post('/register',(req, res) => {
             message: '用户名已存在'
         });
     }
+    const saltRounds = 12;
+    const hashedPassword = awaits bcrypt.hash(password, saltRounds);
     
     const newUser = {
         id: users.length + 1,
         username: username,
-        password: password,
+        password: hashedPassword,
         created: new Date().toLocaleString()
     };
     
@@ -100,6 +103,8 @@ app.post('/login',(req,res)  => {
     const user = users.find(u => u.username === username && u.password === password);
 
     if (user) {
+        const isPasswordValid = await bcrypt.compare(password,user.password);
+        if (isPasswordValid) {
         res.json({
             success: true,
             message: '登录成功',
