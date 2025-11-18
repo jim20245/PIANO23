@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Best Tissue</title>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            overflow-x: hidden;
+            background-color: #000;
+            color: #fff;
+        }
+        
+        /* 音乐控制按钮样式 */
+        .music-controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 10px 15px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .music-controls:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .music-btn {
+            background: linear-gradient(135deg, #6e45e2, #88d3ce);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+        
+        .music-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(110, 69, 226, 0.5);
+        }
+        
+        .music-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .music-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        @media (max-width: 768px) {
+            .music-controls {
+                bottom: 20px;
+                right: 20px;
+                padding: 8px 12px;
+            }
+            
+            .music-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+            
+            .music-label {
+                font-size: 12px;
+            }
+        }
+        
+        /* 页面加载动画 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+        
+        /* 背景视频容器 - 固定不随页面滚动 */
+        .video-bg {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            z-index: -1 !important;
+            overflow: hidden;
+            animation: fadeIn 1s ease-in;
+            will-change: transform;
+            transform: translateZ(-10px); /* 提高性能 */
+        }
+        
+        .video-bg video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: translate(-50%, -50%) !important;
+            pointer-events: none;
+        }
+        
+        /* 渐变叠加层 - 固定不随页面滚动 */
+        .overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100vh !important;
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0.6) 0%,
+                rgba(0, 0, 0, 0.9) 100%
+            );
+            z-index: -1 !important;
+            pointer-events: none;
+        }
+        
+        /* 页面下半部分背景 - 固定不随页面滚动 */
+        .bottom-bg {
+            position: fixed !important;
+            top: 100vh !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: -1 !important;
+            pointer-events: none;
+        }
+        
+        /* 页面内容 */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100vh 20px 100px;
+            animation: fadeInUp 1.2s ease-out;
+            /* 防止内容溢出时的滚动条 */
+            overflow: hidden;
+        }
+        
+        /* 标题样式 */
+        .page-title {
+            text-align: center;
+            margin-bottom: 120px;
+            margin-top: -100px;
+            animation: fadeInUp 1.5s ease 0.2s both;
+        }
+        
+        .page-title h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+            background: linear-gradient(to right, #ffffff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .page-title p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* 响应式标题 */
+        @media (max-width: 768px) {
+            .page-title h1 {
+                font-size: 2.5rem;
+            }
+            .page-title p {
+                font-size: 1.1rem;
+            }
+        }
+        
+        /* 3D产品容器 */
+        .product-carousel {
+            position: relative;
+            min-height: 600px;
+            perspective: 1500px;
+            margin: 100px 0 50px;
+            animation: fadeInUp 1.8s ease 0.5s both;
+            /* 确保容器固定位置 */
+            will-change: transform;
+        }
+        
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .product-item {
+            position: absolute;
+            width: 280px;
+            height: 380px;
+            left: 50%;
+            top: 50%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transform-origin: center;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            /* 设置为完全透明背景 */
+            background: transparent;
+            /* 移除所有边框 */
+            border: none;
+            cursor: pointer;
+            overflow: visible;
+        }
+        
+        .product-item:hover {
+            transform: scale(1.1) translateZ(100px) translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 255, 255, 0.2);
+            z-index: 20;
+            /* 悬停时保持完全透明背景 */
+            background: transparent;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 240px;
+            overflow: hidden;
+            position: relative;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .product-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent 60%);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .product-item:hover .product-image::before {
+            opacity: 1;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .product-item:hover .product-image img {
+            transform: scale(1.15) rotate(2deg);
+        }
+        
+        .product-info {
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            background: transparent;
+            /* 移除分隔线 */
+            border-top: none;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .product-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+            color: #ffffff;
+            /* 增强文字阴影，确保在透明背景下的可读性 */
+            text-shadow: 
+                0 1px 2px rgba(0, 0, 0, 0.9),
+                0 0 15px rgba(0, 0, 0, 0.7),
+                0 0 5px rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.5px;
+        }
+        
+        .product-item:hover .product-title {
+            transform: translateY(-5px);
+        }
+        
+        .product-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 28px;
+            /* 增强按钮可见性，确保在透明背景下清晰可辨 */
+            background: rgba(52, 152, 219, 0.95);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 35px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: 700;
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.6), 0 0 15px rgba(52, 152, 219, 0.4);
+            position: relative;
+            overflow: hidden;
+            /* 移除所有边框 */
+            border: none;
+            min-width: 120px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .product-link::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .product-link:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .product-link:hover {
+            background: linear-gradient(
+                135deg,
+                rgba(52, 152, 219, 1) 0%,
+                rgba(41, 128, 185, 1) 100%
+            );
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.5);
+        }
+        
+        /* 控制按钮 */
+        .carousel-controls {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+            transform: translateY(-50%);
+            z-index: 5;
+            animation: fadeInUp 2s ease 0.8s both;
+        }
+        
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.25) 0%,
+                rgba(255, 255, 255, 0.15) 100%
+            );
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .control-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to right,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: left 0.6s ease;
+        }
+        
+        .control-btn:hover::before {
+            left: 100%;
+        }
+        
+        .control-btn:hover {
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.35) 0%,
+                rgba(255, 255, 255, 0.25) 100%
+            );
+            transform: scale(1.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+        
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* 响应式控制按钮 */
+        @media (max-width: 768px) {
+            .control-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        /* 加载动画 */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease;
+        }
+        
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* 焦点效果增强 */
+        .product-item:focus {
+            outline: 3px solid rgba(52, 152, 219, 0.8);
+            outline-offset: 5px;
+        }
+        
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* 辅助功能增强 */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+            
+            .autoRotate {
+                display: none;
+            }
+        }
+        
+        /* 脉冲动画用于强调 */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(52, 152, 219, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
+            }
+        }
+        
+        /* 焦点产品脉冲效果 */
+        .product-item:nth-child(1) {
+            animation: pulse 2s infinite;
+        }
+        /* 产品详情窗口样式 */
+        .product-detail-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .product-detail-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .detail-container {
+            background: linear-gradient(
+                135deg,
+                rgba(30, 41, 59, 0.95) 0%,
+                rgba(15, 23, 42, 0.95) 100%
+            );
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 60px rgba(52, 152, 219, 0.15);
+            padding: 40px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+        
+        .product-detail-modal.active .detail-container {
+            transform: scale(1);
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .close-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+        
+        .detail-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .detail-image {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+        
+        .detail-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        
+        .detail-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .detail-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(52, 152, 219, 0.3);
+        }
+        
+        .detail-price {
+            font-size: 24px;
+            font-weight: 600;
+            color: #3498db;
+            margin-bottom: 20px;
+        }
+        
+        .detail-description {
+            font-size: 16px;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 25px;
+        }
+        
+        .detail-features {
+            margin-bottom: 25px;
+        }
+        
+        .detail-features h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #3498db;
+        }
+        
+        .detail-features ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .detail-features li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .detail-features li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #3498db;
+            font-weight: bold;
+        }
+        
+        .detail-actions {
+            margin-top: auto;
+        }
+        
+        .detail-cta {
+            display: inline-block;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            text-decoration: none;
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.4);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .detail-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(52, 152, 219, 0.6);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .detail-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .detail-container {
+                padding: 30px 20px;
+                margin: 10px;
+                max-height: 90vh;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch; /* 为iOS设备添加平滑滚动 */
+            }
+            
+            .detail-title {
+                font-size: 24px;
+            }
+            
+            .detail-price {
+                font-size: 20px;
+            }
+            
+            /* 触摸友好的关闭按钮 */
+            .close-btn {
+                width: 48px;
+                height: 48px;
+                top: 15px;
+                right: 15px;
+            }
+            
+            /* 触摸友好的产品项 */
+            .product-item {
+                /* 增加触摸区域大小 */
+                -webkit-tap-highlight-color: transparent; /* 移除iOS点击高亮 */
+                tap-highlight-color: transparent; /* 移除点击高亮 */
+            }
+            
+            /* 优化触摸目标大小 */
+            .detail-cta {
+                padding: 18px 40px;
+                font-size: 18px;
+                width: 100%;
+                text-align: center;
+                display: block;
+            }
+            
+            /* 确保产品详情模态框在移动设备上完全覆盖 */
+            .product-detail-modal {
+                padding: 10px;
+                box-sizing: border-box;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载动画已移除 -->
+    
+    <!-- 背景视频 -->
+    <div class="video-bg">
+        <video autoplay muted loop playsinline id="backgroundVideo">
+            <source src="piano_background.mp4" type="video/mp4">
+            您的浏览器不支持HTML5视频
+        </video>
+    </div>
+    
+    <!-- 音频元素 -->
+    <audio id="background-music" loop>
+        <source src="piano_background_music.mp3" type="audio/mpeg">
+        您的浏览器不支持HTML5音频。
+    </audio>
+    
+    <audio id="click-sound" preload="auto">
+        <source src="翻书.mp3" type="audio/mpeg">
+        您的浏览器不支持HTML5音频。
+    </audio>
+    
+    <!-- 音乐控制按钮 -->
+    <div class="music-controls">
+        <button id="toggle-music" class="music-btn">
+            <i class="fa fa-volume-up"></i>
+        </button>
+        <span class="music-label">背景音乐</span>
+    </div>
+    <div class="overlay"></div>
+    
+    <div class="bottom-bg"></div>
+    
+    <div class="container">
+        <!-- 页面标题 -->
+        <div class="page-title">
+            <h1></h1>
+            <p></p>
+        </div>
+        
+        <!-- 3D产品滑动效果 -->
+        <div class="product-carousel">
+            <div class="carousel-controls">
+                <button class="control-btn" id="prev-btn">&lt;</button>
+                <button class="control-btn" id="next-btn">&gt;</button>
+            </div>
+            <div class="carousel-container" id="carousel-container">
+                <!-- 产品项将通过JavaScript动态设置位置 -->
+                <div class="product-item">
+                    <div class="product-image">
+                        <img src="ro1.jpg" alt="高级古典钢琴">
+                    </div>
+                    <div class="product-info">
+                    </div>
+                </div>
+                <div class="product-item">
+                    <div class="product-image">
+                        <img src="ro2.jpg" alt="专业演奏钢琴">
+                    </div>
+                    <div class="product-info">
+                    </div>
+                </div>
+                <div class="product-item">
+                    <div class="product-image">
+                        <img src="ro3.jpg" alt="智能电钢琴">
+                    </div>
+                    <div class="product-info">
+                    </div>
+                </div>
+                <div class="product-item">
+                    <div class="product-image">
+                        <img src="ro4.jpg" alt="儿童练习钢琴">
+                    </div>
+                    <div class="product-info">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 产品详情窗口 -->
+    <div id="product-detail-modal" class="product-detail-modal">
+        <div class="detail-container">
+            <button id="close-detail-btn" class="close-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+            </button>
+            <div class="detail-content">
+                <div class="detail-image">
+                    <img id="detail-product-image" src="" alt="产品详情图片">
+                </div>
+                <div class="detail-text">
+                    <h2 id="detail-product-title" class="detail-title"></h2>
+                    <div id="detail-product-price" class="detail-price"></div>
+                    <div id="detail-product-description" class="detail-description"></div>
+                    <div class="detail-features">
+                        <h4>产品特点</h4>
+                        <ul id="detail-product-features"></ul>
+                    </div>
+                    <div class="detail-actions">
+                        <a id="detail-product-link" href="#" class="detail-cta">立即购买</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="jquery-3.3.1.slim.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <script>
+        // 产品数据
+        const products = [
+            {
+                id: 1,
+                name: "高级古典钢琴",
+                image: "美食6.jpg",
+                price: "¥39,999",
+                link: "register.html",
+                description: "这款高端古典钢琴融合了经典设计与现代技术，采用优质云杉音板和德国进口琴弦，提供卓越的音质表现。精湛的工艺确保每一个音符都充满表现力，适合专业演奏者和音乐爱好者。",
+                features: [
+                    "云杉实木音板，提供温暖饱满的音色",
+                    "德国进口Renner击弦机系统",
+                    "88键全配重键盘，模拟三角钢琴触感",
+                    "古典哑光黑漆面，经久耐用",
+                    "内置静音系统，支持夜间练习"
+                ]
+            },
+            {
+                id: 2,
+                name: "专业演奏钢琴",
+                image: "美食5.jpg",
+                price: "¥42,999",
+                link: "register.html",
+                description: "专业演奏级钢琴，为音乐大师而设计。采用百年传统工艺精心打造，每一个细节都经过严格把控，呈现出无与伦比的音色和表现力。",
+                features: [
+                    "AAA级阿拉斯加云杉音板",
+                    "手工打磨的实木键盘",
+                    "镀金硬件，经久耐用",
+                    "高端桃花心木饰面，纹理精美",
+                    "内置专业音色采样系统"
+                ]
+            },
+            {
+                id: 3,
+                name: "智能电钢琴",
+                image: "美食4.jpg",
+                price: "¥45,999",
+                link: "register.html",
+                description: "这款智能电钢琴结合了传统钢琴的触感和现代科技的便利性。内置多种音色选择和教学功能，是学习和演奏的理想选择。",
+                features: [
+                    "88键重锤键盘，模拟钢琴触感",
+                    "内置500+种乐器音色",
+                    "智能教学系统，适合各年龄段",
+                    "蓝牙连接，支持多种音乐软件",
+                    "录音功能，方便自我提升"
+                ]
+            },
+            {
+                id: 4,
+                name: "儿童练习钢琴",
+                image: "美食3.jpg",
+                price: "¥49,999",
+                link: "register.html",
+                description: "专为儿童设计的练习钢琴，采用环保材料制作，键盘尺寸适合儿童小手操作，同时提供寓教于乐的学习体验。",
+                features: [
+                    "环保木材制作，安全无毒",
+                    "儿童友好的键盘设计",
+                    "内置教学游戏，激发学习兴趣",
+                    "可调节高度，适应不同年龄",
+                    "静音设计，不打扰家人休息"
+                ]
+            },
+           
+            
+        ];
+        
+        // 3D轮播实现
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('carousel-container');
+            const items = document.querySelectorAll('.product-item');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            const totalItems = items.length;
+            let radius = 450; // 圆形轨道半径
+            let angle = 0;
+            const angleIncrement = 360 / totalItems;
+            
+            // 添加状态变量，防止更新冲突
+            let isUpdatingPositions = false;
+            let isAnimating = false;
+            
+            // 初始设置产品位置
+            function setProductPositions() {
+                // 添加防抖检查，避免频繁重绘
+                if (isUpdatingPositions) return;
+                isUpdatingPositions = true;
+                
+                items.forEach((item, index) => {
+                    // 确保角度计算的精度，避免累积误差
+                    const adjustedAngle = (angle + index * angleIncrement) % 360;
+                    const currentAngle = adjustedAngle * Math.PI / 180;
+                    // 四舍五入坐标值，避免小数精度问题导致的闪烁
+                    const x = Math.round(Math.sin(currentAngle) * radius * 100) / 100;
+                    const z = Math.round(Math.cos(currentAngle) * radius * 100) / 100;
+                    const scale = Math.round(((z + radius) / (2 * radius) * 0.8 + 0.2) * 100) / 100;
+                    const opacity = Math.round(((z + radius) / (2 * radius)) * 100) / 100;
+                    
+                    item.style.transform = `translate(-50%, -50%) translate3d(${x}px, 0, ${z}px) scale(${scale})`;
+                    item.style.opacity = opacity;
+                    item.style.zIndex = Math.round(z + radius); // 背面的元素z-index较低
+                });
+                
+                // 使用setTimeout释放更新锁，确保下一帧可以更新
+                setTimeout(() => {
+                    isUpdatingPositions = false;
+                }, 0);
+            }
+            
+            // 初始化位置
+            setProductPositions();
+            
+            // 为每个产品项添加点击事件
+            items.forEach((item, index) => {
+                // 确保索引在products数组范围内
+                const productIndex = index % products.length;
+                item.addEventListener('click', function() {
+                    // 检查是否正在拖拽，如果是则不打开详情
+                    if (isDragging || isTouchDragging) return;
+                    // 打开产品详情窗口
+                    openProductDetail(products[productIndex]);
+                });
+                
+                // 为移动设备添加触摸结束事件（防止拖拽时意外打开）
+                item.addEventListener('touchend', function(e) {
+                    // 只有在没有拖拽的情况下才打开详情
+                    if (!isTouchDragging) {
+                        const productIndex = index % products.length;
+                        openProductDetail(products[productIndex]);
+                        // 阻止事件冒泡到容器
+                        e.stopPropagation();
+                    }
+                });
+                
+                // 确保产品项在移动设备上可点击
+                item.style.cursor = 'pointer';
+                item.style.userSelect = 'none'; // 防止文本选择干扰点击
+            });
+            
+            // 添加滚动时的平滑过渡效果
+            function animateToPosition(newAngle) {
+                // 防止动画叠加
+                if (isAnimating) return;
+                isAnimating = true;
+                
+                const startAngle = angle;
+                const difference = newAngle - startAngle;
+                const duration = 400; // 减少动画时间，使吸附更快速稳定
+                const startTime = performance.now();
+                
+                function animate(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    // 使用更稳定的缓动函数
+                    const easeProgress = 1 - Math.pow(1 - progress, 3);
+                    
+                    angle = startAngle + (difference * easeProgress);
+                    setProductPositions();
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        // 确保动画结束时角度精确归一化
+                        angle = Math.round(angle / angleIncrement) * angleIncrement;
+                        setProductPositions();
+                        
+                        // 动画完成后释放状态锁
+                        isAnimating = false;
+                    }
+                }
+                
+                requestAnimationFrame(animate);
+            }
+            
+            // 上一个按钮
+            prevBtn.addEventListener('click', function() {
+                const newAngle = angle + angleIncrement;
+                animateToPosition(newAngle);
+            });
+            
+            // 下一个按钮
+            nextBtn.addEventListener('click', function() {
+                const newAngle = angle - angleIncrement;
+                animateToPosition(newAngle);
+            });
+            
+            // 添加键盘控制
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft') {
+                    prevBtn.click();
+                } else if (e.key === 'ArrowRight') {
+                    nextBtn.click();
+                }
+            });
+            
+            // 自动旋转
+            let autoRotateInterval;
+            
+            function startAutoRotate() {
+                autoRotateInterval = setInterval(() => {
+                    const newAngle = angle - angleIncrement;
+                    animateToPosition(newAngle);
+                }, 5000); // 5秒自动旋转一次
+            }
+            
+            // 启动自动旋转功能
+            startAutoRotate();
+            
+            // 鼠标事件调整，保留拖拽功能并添加暂停自动旋转逻辑
+            
+            // 触摸设备支持
+            let touchStartX = 0;
+            let touchEndX = 0;
+            let touchStartAngle = 0;
+            let isTouchDragging = false;
+            let touchMoveTime = 0;
+            let lastTouchX = 0;
+            
+            // 暂停自动旋转
+            function pauseAutoRotate() {
+                if (autoRotateInterval) {
+                    clearInterval(autoRotateInterval);
+                    autoRotateInterval = null;
+                }
+            }
+            
+            // 恢复自动旋转
+            function resumeAutoRotate() {
+                if (!autoRotateInterval) {
+                    startAutoRotate();
+                }
+            }
+            
+            container.addEventListener('touchstart', (e) => {
+                pauseAutoRotate(); // 暂停自动旋转
+                touchStartX = e.changedTouches[0].screenX;
+                lastTouchX = touchStartX;
+                touchEndX = 0; // 重置结束位置
+                touchStartAngle = angle;
+                isTouchDragging = true;
+                touchMoveTime = Date.now();
+                e.preventDefault(); // 防止页面滚动
+            }, { passive: false });
+            
+            container.addEventListener('touchmove', (e) => {
+                if (isTouchDragging) {
+                    const touchX = e.changedTouches[0].screenX;
+                    const deltaX = touchX - touchStartX;
+                    const touchSensitivity = 0.5; // 触摸灵敏度
+                    angle = touchStartAngle + (deltaX * touchSensitivity);
+                    setProductPositions();
+                    
+                    // 记录最后触摸位置和时间用于惯性计算
+                    lastTouchX = touchX;
+                    touchMoveTime = Date.now();
+                    e.preventDefault(); // 防止页面滚动
+                }
+            }, { passive: false });
+            
+            container.addEventListener('touchend', (e) => {
+                if (isTouchDragging) {
+                    isTouchDragging = false;
+                    touchEndX = e.changedTouches[0].screenX;
+                    
+                    // 计算惯性滑动
+                    const elapsedTime = Date.now() - touchMoveTime;
+                    const swipeDistance = touchEndX - lastTouchX;
+                    
+                    // 3秒后恢复自动旋转
+                    setTimeout(resumeAutoRotate, 3000);
+                    
+                    // 如果滑动速度快，添加惯性效果
+                    if (elapsedTime < 100 && Math.abs(swipeDistance) > 20) {
+                        const inertiaFactor = 1.5; // 降低惯性因子，使滑动更可控
+                        const inertiaDistance = swipeDistance * inertiaFactor;
+                        const inertiaDuration = 400; // 减少惯性持续时间，使吸附更快
+                        const startInertiaAngle = angle;
+                        // 根据滑动距离计算目标角度，但确保最终会吸附到最近的产品位置
+                        const targetInertiaAngle = angle + (inertiaDistance * 0.5);
+                        const startTime = Date.now();
+                        
+                        function animateInertia() {
+                            const elapsed = Date.now() - startTime;
+                            const progress = Math.min(elapsed / inertiaDuration, 1);
+                            
+                            // 使用缓动函数实现惯性减速
+                            const easeOutProgress = 1 - Math.pow(1 - progress, 3);
+                            angle = startInertiaAngle + ((targetInertiaAngle - startInertiaAngle) * easeOutProgress);
+                            setProductPositions();
+                            
+                            if (progress < 1) {
+                                requestAnimationFrame(animateInertia);
+                            } else {
+                                handleSwipe(); // 惯性结束后精确吸附到最近的产品
+                            }
+                        }
+                        
+                        requestAnimationFrame(animateInertia);
+                    } else {
+                        handleSwipe(); // 直接吸附到最近的产品
+                    }
+                }
+            }, false);
+            
+            // 鼠标拖拽支持
+            let isDragging = false;
+            let mouseStartX = 0;
+            let mouseEndX = 0;
+            let startAngle = 0;
+            
+            container.addEventListener('mousedown', (e) => {
+                pauseAutoRotate(); // 暂停自动旋转
+                isDragging = true;
+                mouseStartX = e.clientX;
+                mouseEndX = e.clientX; // 初始化结束位置
+                startAngle = angle;
+                container.style.cursor = 'grabbing';
+            });
+            
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const deltaX = e.clientX - mouseStartX;
+                    const dragSensitivity = 0.5; // 拖拽灵敏度
+                    const newAngle = startAngle + (deltaX * dragSensitivity);
+                    angle = newAngle;
+                    setProductPositions();
+                    mouseEndX = e.clientX; // 记录当前鼠标位置
+                }
+            });
+            
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    container.style.cursor = 'grab';
+                    handleSwipe(); // 确保鼠标拖拽后也能正确吸附到最近的产品位置
+                    // 3秒后恢复自动旋转
+                    setTimeout(resumeAutoRotate, 3000);
+                }
+            });
+            
+            // 设置初始鼠标样式
+            container.style.cursor = 'grab';
+            
+            function handleSwipe() {
+                // 优化版的滑动处理，专注于精确吸附和流畅切换
+                
+                // 直接吸附到最近的产品位置，确保产品始终居中显示
+                const normalizedAngle = Math.round(angle / angleIncrement) * angleIncrement;
+                
+                // 确保角度在合理范围内，避免累积误差
+                const boundedAngle = normalizedAngle % 360;
+                
+                // 只有当需要明显调整位置时才执行动画，增加阈值避免微小抖动
+                if (Math.abs(boundedAngle - angle) > 1) {
+                    animateToPosition(boundedAngle);
+                } else {
+                    // 对于微小差异，直接设置而不执行动画
+                    angle = boundedAngle;
+                    setProductPositions();
+                }
+                
+                // 完全重置所有交互状态变量，避免不同交互方式之间的干扰
+                touchStartX = 0;
+                touchEndX = 0;
+                lastTouchX = 0;
+                mouseStartX = 0;
+                mouseEndX = 0;
+                isTouchDragging = false;
+                isDragging = false;
+            }
+            
+            // 响应式调整
+             function handleResize() {
+                 const viewportWidth = window.innerWidth;
+                 if (viewportWidth < 768) {
+                     // 移动设备调整
+                     radius = 300;
+                     items.forEach(item => {
+                         item.style.width = '200px';
+                         item.style.height = '280px';
+                     });
+                 } else if (viewportWidth < 992) {
+                     // 平板设备调整
+                     radius = 380;
+                     items.forEach(item => {
+                         item.style.width = '240px';
+                         item.style.height = '320px';
+                     });
+                 } else {
+                     // 桌面设备
+                     radius = 450;
+                     items.forEach(item => {
+                         item.style.width = '280px';
+                         item.style.height = '380px';
+                     });
+                 }
+                 setProductPositions();
+             }
+            
+            // 页面滚动时添加视差效果
+            window.addEventListener('scroll', function() {
+                const scrollPosition = window.scrollY;
+                const video = document.querySelector('.video-bg video');
+                video.style.transform = `translate(-50%, calc(-50% + ${scrollPosition * 0.1}px))`;
+            });
+            
+            // 加载动画已移除
+            
+            // 图片懒加载
+            const images = document.querySelectorAll('.product-image img');
+            const imgOptions = {
+                threshold: 0.1,
+                rootMargin: "0px 0px 200px 0px"
+            };
+            
+            const imgObserver = new IntersectionObserver((entries, imgObserver) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    
+                    const img = entry.target;
+                    // 如果图片尚未加载，添加淡入效果
+                    img.style.opacity = '0';
+                    img.style.transition = 'opacity 0.5s ease';
+                    
+                    img.onload = () => {
+                        img.style.opacity = '1';
+                    };
+                    
+                    imgObserver.unobserve(img);
+                });
+            }, imgOptions);
+            
+            images.forEach(image => {
+                imgObserver.observe(image);
+            });
+            
+            // 增强的错误处理
+            const backgroundVideo = document.getElementById('backgroundVideo');
+            backgroundVideo.onerror = function() {
+                // 如果视频加载失败，使用备用背景
+                const videoBg = document.querySelector('.video-bg');
+                videoBg.style.background = 'linear-gradient(135deg, #000000 0%, #333333 100%)';
+                videoBg.style.display = 'flex';
+                videoBg.style.justifyContent = 'center';
+                videoBg.style.alignItems = 'center';
+                videoBg.innerHTML += '<div style="text-align: center;"><h2>产品展示</h2><p>探索我们的精选系列</p></div>';
+            };
+            
+            // 为产品项添加点击事件和键盘焦点支持
+            items.forEach((item, index) => {
+                // 存储产品索引
+                item.dataset.productIndex = index;
+                
+                // 添加悬停音效
+                item.addEventListener('mouseenter', function() {
+                    playSound('hover-sound');
+                });
+                
+                // 添加点击事件打开详情窗口
+                item.addEventListener('click', function(e) {
+                    // 如果点击的是链接，不阻止默认行为
+                    if (e.target.closest('.product-link')) {
+                        return;
+                    }
+                    e.preventDefault();
+                    const productIndex = parseInt(this.dataset.productIndex);
+                    openProductDetail(products[productIndex]);
+                });
+                
+                item.tabIndex = 0;
+                item.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        // 直接打开详情窗口
+                        const productIndex = parseInt(this.dataset.productIndex);
+                        openProductDetail(products[productIndex]);
+                    }
+                });
+            });
+            
+            // 添加音乐控制按钮事件
+            document.getElementById('toggle-music').addEventListener('click', function() {
+                toggleBackgroundMusic();
+            });
+            
+            // 页面首次交互时允许播放背景音乐（遵循浏览器音频策略）
+            document.addEventListener('click', function initAudio() {
+                // 尝试预加载背景音乐，但不自动播放
+                const music = document.getElementById('background-music');
+                music.load();
+                
+                // 移除初始化事件监听器，避免重复加载
+                document.removeEventListener('click', initAudio);
+            }, { once: true });
+            
+            // 音频控制函数
+            function playSound(soundId) {
+                const sound = document.getElementById(soundId);
+                if (sound) {
+                    sound.currentTime = 0;
+                    sound.play().catch(e => console.log('无法播放音效:', e));
+                }
+            }
+            
+            // 背景音乐控制
+            function toggleBackgroundMusic() {
+                const music = document.getElementById('background-music');
+                const musicBtn = document.getElementById('toggle-music');
+                const musicIcon = musicBtn.querySelector('i');
+                
+                if (music.paused) {
+                    music.play().then(() => {
+                        music.volume = 0.3; // 设置适当的音量
+                        musicIcon.classList.remove('fa-volume-off');
+                        musicIcon.classList.add('fa-volume-up');
+                    }).catch(e => console.log('无法播放背景音乐:', e));
+                } else {
+                    music.pause();
+                    musicIcon.classList.remove('fa-volume-up');
+                    musicIcon.classList.add('fa-volume-off');
+                }
+            }
+            
+            // 打开产品详情窗口
+            function openProductDetail(product) {
+                // 播放点击音效
+                playSound('click-sound');
+                
+                const modal = document.getElementById('product-detail-modal');
+                const detailImage = document.getElementById('detail-product-image');
+                const detailTitle = document.getElementById('detail-product-title');
+                const detailPrice = document.getElementById('detail-product-price');
+                const detailDescription = document.getElementById('detail-product-description');
+                const detailFeatures = document.getElementById('detail-product-features');
+                const detailLink = document.getElementById('detail-product-link');
+                
+                // 设置详情内容
+                detailImage.src = product.image;
+                detailImage.alt = product.name;
+                detailTitle.textContent = product.name;
+                detailPrice.textContent = product.price;
+                detailDescription.textContent = product.description;
+                detailLink.href = product.link;
+                
+                // 清空并添加特点列表
+                detailFeatures.innerHTML = '';
+                product.features.forEach(feature => {
+                    const li = document.createElement('li');
+                    li.textContent = feature;
+                    detailFeatures.appendChild(li);
+                });
+                
+                // 显示详情窗口
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // 禁止背景滚动
+            }
+            
+            // 关闭产品详情窗口
+            function closeProductDetail() {
+                // 播放点击音效
+                playSound('click-sound');
+                
+                const modal = document.getElementById('product-detail-modal');
+                modal.classList.remove('active');
+                document.body.style.overflow = ''; // 恢复背景滚动
+            }
+            
+            // 添加关闭按钮事件
+            document.getElementById('close-detail-btn').addEventListener('click', closeProductDetail);
+            
+            // 点击窗口外部关闭
+            document.getElementById('product-detail-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeProductDetail();
+                }
+            });
+            
+            // 按ESC键关闭
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.getElementById('product-detail-modal').classList.contains('active')) {
+                    closeProductDetail();
+                }
+            });
+            
+            window.addEventListener('resize', handleResize);
+            handleResize(); // 初始调用
+        });
+    </script>
+</body>
+</html>
