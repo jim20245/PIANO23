@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>古风动态背景</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#c9a87a',
+                        secondary: '#8a704e',
+                        dark: '#1a1a1a',
+                        light: '#f8f4e8'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* 全局样式 */
+        body {
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* 视频背景容器 */
+        #video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        /* 视频样式 */
+        #background-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
+        
+        /* 渐变叠加层 */
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8));
+            z-index: 1;
+        }
+        
+        /* 自定义动画 */
+        @keyframes pulse-slow {
+            0%, 100% {
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        /* 响应式视频调整 */
+        @media (max-width: 768px) {
+            #background-video {
+                min-width: auto;
+                min-height: 100%;
+                width: 100%;
+                height: auto;
+            }
+        }
+        
+        /* 图片展示容器 */
+        .image-showcase {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+        
+        .image-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        /* 图片项样式 */
+        .image-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(201, 168, 122, 0.2);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 22.5px;
+            width: 25%;
+            margin: 0 auto;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .image-item.expanded {
+            height: auto;
+            max-height: 800px;
+            width: 100%;
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 240, 210, 0.4);
+            border-radius: 8px;
+            overflow: visible;
+        }
+        
+        .image-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .image-item.expanded .image-wrapper {
+            height: auto;
+            overflow: visible;
+            background: linear-gradient(rgba(230, 215, 185, 0.1), rgba(200, 180, 150, 0.05));
+            backdrop-filter: blur(1px);
+        }
+        
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: brightness(0.8);
+        }
+        
+        .image-item.expanded img {
+            height: 50%;
+            width: 50%;
+            object-fit: contain;
+            filter: brightness(1) opacity(0.7) sepia(0.1);
+            transform: scale(1.05);
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 第一张图片展开时平铺显示 */
+        .image-item:nth-child(1).expanded img {
+            width: 50%;
+            height: auto;
+            transform: none;
+            object-fit: contain;
+            filter: brightness(1) opacity(1);
+            margin: 0 auto;
+        }
+        
+        /* 第二张图片展开时平铺显示，与第一张效果相同 */
+        .image-item:nth-child(2).expanded img {
+            width: 50%;
+            height: auto;
+            transform: none;
+            object-fit: contain;
+            filter: brightness(1) opacity(1);
+            margin: 0 auto;
+        }
+        
+        /* 第三张图片展开时平铺显示，与第一张效果相同 */
+        .image-item:nth-child(3).expanded img {
+            width: 50%;
+            height: auto;
+            transform: none;
+            object-fit: contain;
+            filter: brightness(1) opacity(1);
+            margin: 0 auto;
+        }
+        
+        /* 文章内容样式 */
+        .article-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+            color: #f8f4e8;
+            padding: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 0;
+            overflow: hidden;
+        }
+        
+        .image-item.expanded .article-content {
+            opacity: 1;
+            transform: translateY(0);
+            max-height: 500px;
+            position: relative;
+            background: linear-gradient(rgba(230, 215, 185, 0.1), rgba(200, 180, 150, 0.15), rgba(180, 160, 120, 0.1));
+            backdrop-filter: blur(2px);
+        }
+        
+        .article-content h3 {
+            font-size: 1.5rem;
+            color: #c9a87a;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .article-content p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        /* 图片标题样式 */
+        .image-title {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            color: #f8f4e8;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .image-item.expanded .image-title {
+            opacity: 0;
+        }
+        
+        /* 响应式图片调整 */
+        @media (max-width: 768px) {
+            .image-showcase {
+                padding: 30px 15px;
+            }
+            
+            .image-container {
+                gap: 1px;
+            }
+            
+            .image-item {
+                height: 17.5px;
+                width: 40%;
+            }
+            
+            .image-item.expanded {
+                width: 100%;
+            }
+            
+            .article-content h3 {
+                font-size: 1.3rem;
+            }
+            
+            .article-content p {
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* 产品展示响应式样式 */
+        @media (max-width: 640px) {
+            .product-showcase {
+                padding: 80px 15px 60px;
+            }
+            
+            .product-showcase h2 {
+                font-size: 2rem;
+                margin-bottom: 20px;
+            }
+            
+            .product-card .product-info {
+                padding: 15px;
+            }
+            
+            .product-info h3 {
+                font-size: 1.25rem;
+            }
+            
+            .product-info p {
+                font-size: 0.9rem;
+            }
+            
+            .product-image {
+                height: 48px;
+            }
+        }
+        
+        @media (min-width: 641px) and (max-width: 1023px) {
+            .product-image {
+                height: 52px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 视频背景容器 -->
+    <div id="video-container">
+        <video id="background-video" autoplay muted loop playsinline>
+            <source src="肖邦.mp4" type="video/mp4">
+            您的浏览器不支持视频标签
+        </video>
+        
+        <!-- 背景音乐 (需要用户交互才能播放) -->
+        <audio id="backgroundMusic" loop volume="0.3">
+            <source src="肖邦.mp3" type="audio/mpeg">
+            您的浏览器不支持HTML5音频。
+         </audio>
+        
+        <!-- 翻书音效 -->
+        <audio id="pageTurnSound" preload="auto">
+            <source src="翻书.mp3" type="audio/mpeg">
+            您的浏览器不支持音频元素
+         </audio>
+        <div id="overlay"></div>
+    </div>
+    
+    <!-- 登录和注册按钮 -->
+    <!--<div class="fixed top-4 right-4 z-30 flex space-x-3">
+        <a id="loginLink" href="login.html" class="relative w-12 h-12 overflow-hidden cursor-pointer group rounded-full inline-block">
+            
+            <img src="logo5.png" alt="" class="absolute inset-0 w-full h-full object-contain">
+        </a>
+       
+    </div> -->
+
+    <!-- 图片展示区域 -->
+    <div class="image-showcase">
+        <div class="image-container">
+            <!-- 第一张图片 -->
+            <div class="image-item" data-image="lt1.jpg">
+                <div class="image-wrapper">
+                    <img src="lt1.jpg" alt="古风场景1">
+                    <div class="article-content">
+                        <h3>钢琴教学理念</h3>
+                        <p>我们秉承"兴趣为先，因材施教，夯实基础，享受音乐"的教学理念，致力于为每位学习者打开音乐之门。</p>
+                        <p>良好的音乐素养和扎实的基本功是通往自由演奏的基石，而对音乐发自内心的热爱则是持续学习的永恒动力。我们相信每位学生都有独特的音乐潜能，通过科学的方法引导和个性化的培养，能够让音乐成为伴随一生的美好伙伴。</p>
+                        <p>—— 赵科宇</p>
+                    </div>
+                </div>
+                <div class="image-title">古风雅韵 第一景</div>
+            </div>
+            
+            <!-- 第二张图片 -->
+            <div class="image-item" data-image="lt2.jpg">
+                <div class="image-wrapper">
+                    <img src="lt2.jpg" alt="教学方法">
+                    <div class="article-content">
+                        <h3>教学方法</h3>
+                        <p>在我们的教学体系中，我们采用循序渐进的方式，根据每位学生的特点和需求，量身定制个性化的学习计划。从基础的坐姿、手型到进阶的技巧和音乐表现力，我们注重每一个细节的培养。</p>
+                        <p>我们鼓励学生在学习过程中培养独立思考能力，通过聆听、分析大师作品，提升音乐鉴赏能力。同时，我们也注重实践与理论相结合，让学生不仅能演奏，更能理解音乐背后的文化内涵和艺术价值。</p>
+                    </div>
+                </div>
+                <div class="image-title">教学方法</div>
+            </div>
+            
+            <!-- 第三张图片 -->
+            <div class="image-item" data-image="lt3.jpg">
+                <div class="image-wrapper">
+                    <img src="lt3.jpg" alt="公告通知">
+                    <div class="article-content">
+                        <h3>公告通知</h3>
+                        <p><strong>秋季课程招生中</strong></p>
+                        <p>1. 新生体验课将于11月15日开始，预约即送试课礼包。</p>
+                        <p>2. 考级班课程：11月20日左右将进行考级学院报名登记，报名从速。</p>
+                        <p>3. 年度音乐会：将于12月左右在成都音乐厅举行，所有学员均可报名参演。</p>
+                        <p>4. 优惠活动：老学员推荐新学员报名成功，双方均可获得课程9折优惠。</p>
+                        <p>详情请咨询客服热线19130133027。</p>
+                    </div>
+                </div>
+                <div class="image-title">公告通知</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 产品展示区域 -->
+    <div class="product-showcase relative z-2 max-w-7xl mx-auto px-4 py-12 md:py-20">
+        <div class="text-center mb-8">
+            <div class="w-16 h-1 bg-primary/60 mx-auto mb-4 rounded"></div>
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-primary animate-pulse-slow">精选钢琴产品</h2>
+            <div class="w-32 h-0.5 bg-primary/40 mx-auto rounded"></div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- 产品1 -->
+            <div class="product-card bg-gradient-to-b from-black/40 to-black/20 backdrop-blur-sm rounded-lg overflow-hidden border border-primary/30 transform transition-all duration-500 hover:scale-105 hover:shadow-lg hover:shadow-primary/20">
+                <div class="product-image h-56 overflow-hidden relative">
+                    <img src="piano.jpg" alt="精品立式钢琴" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110 sepia-[0.1]">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+                <div class="product-info p-6">
+                    <div class="w-12 h-0.5 bg-primary/30 mb-3 rounded"></div>
+                    <h3 class="text-xl font-semibold text-primary mb-2">精品立式钢琴</h3>
+                    <p class="text-light/80 mb-4 line-clamp-3">高品质实木钢琴，专业演奏级音质，适合进阶学习者和专业演奏者，采用德国进口配件，音色饱满圆润。</p>
+                    <div class="flex justify-between items-center pt-2 border-t border-primary/10">
+                        <span class="text-xl font-bold text-primary">¥29,800</span>
+                        <a href="payment-processing.html" class="buy-button bg-primary text-dark px-4 py-2 rounded transition-all duration-300 hover:bg-secondary hover:shadow-md">立即购买</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 产品2 -->
+            <div class="product-card bg-gradient-to-b from-black/40 to-black/20 backdrop-blur-sm rounded-lg overflow-hidden border border-primary/30 transform transition-all duration-500 hover:scale-105 hover:shadow-lg hover:shadow-primary/20">
+                <div class="product-image h-56 overflow-hidden relative">
+                    <img src="zs1.jpg" alt="儿童电钢琴" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110 sepia-[0.1]">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+                <div class="product-info p-6">
+                    <div class="w-12 h-0.5 bg-primary/30 mb-3 rounded"></div>
+                    <h3 class="text-xl font-semibold text-primary mb-2">儿童电钢琴</h3>
+                    <p class="text-light/80 mb-4 line-clamp-3">专为儿童设计的电钢琴，88键重锤，仿钢琴手感，内置教学功能，培养孩子音乐兴趣的理想选择。</p>
+                    <div class="flex justify-between items-center pt-2 border-t border-primary/10">
+                        <span class="text-xl font-bold text-primary">¥3,680</span>
+                        <a href="payment-processing.html" class="buy-button bg-primary text-dark px-4 py-2 rounded transition-all duration-300 hover:bg-secondary hover:shadow-md">立即购买</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 产品3 -->
+            <div class="product-card bg-gradient-to-b from-black/40 to-black/20 backdrop-blur-sm rounded-lg overflow-hidden border border-primary/30 transform transition-all duration-500 hover:scale-105 hover:shadow-lg hover:shadow-primary/20">
+                <div class="product-image h-56 overflow-hidden relative">
+                    <img src="zs2.jpg" alt="钢琴教程套装" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110 sepia-[0.1]">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+                <div class="product-info p-6">
+                    <div class="w-12 h-0.5 bg-primary/30 mb-3 rounded"></div>
+                    <h3 class="text-xl font-semibold text-primary mb-2">钢琴教程套装</h3>
+                    <p class="text-light/80 mb-4 line-clamp-3">包含初级到高级完整教程，附带教学视频和曲谱，适合自学和辅助课堂教学，由资深钢琴教师编写。</p>
+                    <div class="flex justify-between items-center pt-2 border-t border-primary/10">
+                        <span class="text-xl font-bold text-primary">¥598</span>
+                        <a href="payment-processing.html" class="buy-button bg-primary text-dark px-4 py-2 rounded transition-all duration-300 hover:bg-secondary hover:shadow-md">立即购买</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 产品4 -->
+            <div class="product-card bg-gradient-to-b from-black/40 to-black/20 backdrop-blur-sm rounded-lg overflow-hidden border border-primary/30 transform transition-all duration-500 hover:scale-105 hover:shadow-lg hover:shadow-primary/20">
+                <div class="product-image h-56 overflow-hidden relative">
+                    <img src="zs3.jpg" alt="隔音钢琴罩" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110 sepia-[0.1]">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+                <div class="product-info p-6">
+                    <div class="w-12 h-0.5 bg-primary/30 mb-3 rounded"></div>
+                    <h3 class="text-xl font-semibold text-primary mb-2">隔音钢琴罩</h3>
+                    <p class="text-light/80 mb-4 line-clamp-3">专业隔音设计，有效减少钢琴音量，不影响音质，适合公寓使用，同时具备防尘防潮功能。</p>
+                    <div class="flex justify-between items-center pt-2 border-t border-primary/10">
+                        <span class="text-xl font-bold text-primary">¥799</span>
+                        <a href="payment-processing.html" class="buy-button bg-primary text-dark px-4 py-2 rounded transition-all duration-300 hover:bg-secondary hover:shadow-md">立即购买</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 产品5 -->
+            <div class="product-card bg-gradient-to-b from-black/40 to-black/20 backdrop-blur-sm rounded-lg overflow-hidden border border-primary/30 transform transition-all duration-500 hover:scale-105 hover:shadow-lg hover:shadow-primary/20">
+                <div class="product-image h-56 overflow-hidden relative">
+                    <img src="y1.jpg" alt="专业钢琴调音服务" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110 sepia-[0.1]">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+                <div class="product-info p-6">
+                    <div class="w-12 h-0.5 bg-primary/30 mb-3 rounded"></div>
+                    <h3 class="text-xl font-semibold text-primary mb-2">专业钢琴调音服务</h3>
+                    <p class="text-light/80 mb-4 line-clamp-3">由国家认证调音师提供上门服务，包含全面检修、调音和维护建议，确保钢琴始终保持最佳状态。</p>
+                    <div class="flex justify-between items-center pt-2 border-t border-primary/10">
+                        <span class="text-xl font-bold text-primary">¥680</span>
+                        <a href="payment-processing.html" class="buy-button bg-primary text-dark px-4 py-2 rounded transition-all duration-300 hover:bg-secondary hover:shadow-md">立即购买</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 产品6 -->
+            <div class="product-card bg-gradient-to-b from-black/40 to-black/20 backdrop-blur-sm rounded-lg overflow-hidden border border-primary/30 transform transition-all duration-500 hover:scale-105 hover:shadow-lg hover:shadow-primary/20">
+                <div class="product-image h-56 overflow-hidden relative">
+                    <img src="y2.jpg" alt="钢琴考级辅导课程" class="w-full h-full object-cover transition-transform duration-700 hover:scale-110 sepia-[0.1]">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+                <div class="product-info p-6">
+                    <div class="w-12 h-0.5 bg-primary/30 mb-3 rounded"></div>
+                    <h3 class="text-xl font-semibold text-primary mb-2">钢琴考级辅导课程</h3>
+                    <p class="text-light/80 mb-4 line-clamp-3">针对各等级考试的专业辅导课程，由考级评委亲自授课，包含曲目讲解、技巧训练和模拟考试环节。</p>
+                    <div class="flex justify-between items-center pt-2 border-t border-primary/10">
+                        <span class="text-xl font-bold text-primary">¥1,280</span>
+                        <a href="payment-processing.html" class="buy-button bg-primary text-dark px-4 py-2 rounded transition-all duration-300 hover:bg-secondary hover:shadow-md">立即购买</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- JavaScript -->
+      <script>
+          // 登录按钮已直接链接到login.html页面
+          
+          // 注册按钮已直接链接到register.html页面
+          
+          // 视频加载检查
+          const video = document.getElementById('background-video');
+          video.addEventListener('error', () => {
+              console.error('视频加载失败');
+              // 添加备用背景
+              const container = document.getElementById('video-container');
+              container.style.background = 'linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7))';
+          });
+          
+          // 图片交互功能
+          const imageItems = document.querySelectorAll('.image-item');
+          
+          imageItems.forEach(item => {
+              // 图片加载错误处理
+              const img = item.querySelector('img');
+              img.addEventListener('error', () => {
+                  console.error(`图片加载失败: ${img.src}`);
+                  const imageTitle = item.querySelector('.image-title');
+                  imageTitle.textContent = '图片加载失败';
+                  imageTitle.style.color = '#ff6b6b';
+              });
+              
+              // 图片点击交互
+             item.addEventListener('click', () => {
+                 // 切换展开/收起状态
+                 item.classList.toggle('expanded');
+                 
+                 // 第一张、第二张和第三张图片添加翻书音效
+                 if (item === imageItems[0] || item === imageItems[1] || item === imageItems[2]) {
+                     const pageSound = document.getElementById('pageTurnSound');
+                     if (pageSound) {
+                         pageSound.currentTime = 0; // 重置音频
+                         pageSound.play().catch(error => {
+                             console.log('音效播放需要用户交互:', error);
+                         });
+                     }
+                 }
+                  
+                  // 尝试播放背景音乐
+                  const bgMusic = document.getElementById('backgroundMusic');
+                  if (bgMusic && bgMusic.paused) {
+                      bgMusic.play().catch(error => {
+                          console.log('音乐播放需要用户交互:', error);
+                      });
+                  }
+                  
+                  // 如果展开，平滑滚动到当前图片
+                  if (item.classList.contains('expanded')) {
+                      item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }
+              });
+          });
+          
+          // 页面加载后，监听任何用户交互来启动背景音乐
+          document.addEventListener('DOMContentLoaded', function() {
+              const bgMusic = document.getElementById('backgroundMusic');
+              
+              function startMusic() {
+                  if (bgMusic && bgMusic.paused) {
+                      bgMusic.play().catch(error => {
+                          console.log('音乐播放需要用户交互:', error);
+                      });
+                  }
+                  // 移除事件监听，避免重复尝试
+                  document.removeEventListener('click', startMusic);
+                  document.removeEventListener('touchstart', startMusic);
+                  document.removeEventListener('keydown', startMusic);
+              }
+              
+              // 添加多个事件监听器以捕获任何用户交互
+              document.addEventListener('click', startMusic);
+              document.addEventListener('touchstart', startMusic);
+              document.addEventListener('keydown', startMusic);
+          });
+      </script>
+</body>
+</html>
