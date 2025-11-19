@@ -84,7 +84,7 @@
                             required
                             maxlength="30"
                             class="w-full pl-10 py-2.5 border border-gray-300 rounded-lg input-focus"
-                            placeholder="input E-mail"
+                            placeholder="input E-mail（信息地址）"
                         >
                     </div>
                 </div>
@@ -102,7 +102,7 @@
                             required
                             maxlength="9"
                             class="w-full pl-10 py-2.5 border border-gray-300 rounded-lg input-focus"
-                            placeholder="input password"
+                            placeholder="input password（手机号）"
                         >
                         <button 
                             type="button" 
@@ -112,7 +112,7 @@
                             <i class="fa fa-eye"></i>
                         </button>
                     </div>
-                    <p class="text-xs text-gray-500 mt-1">password can not exceed 9 characters</p>
+                    <p class="text-xs text-gray-500 mt-1">password can not exceed 11 characters</p>
                 </div>
                 
                 <div>
@@ -153,14 +153,14 @@
 
             <div class="mt-6 text-center">
                 <p class="text-gray-600">
-                    <a href="login.html" class="text-primary font-medium hover:underline">login</a>
+                    <a href="login.html" class="text-primary font-medium hover:underline">login （发货）</a>
                 </p>
             </div>
         </div>
 
         <!-- 社交媒体注册选项 -->
         <div class="mt-6 text-center">
-            <p class="text-gray-500 mb-4">welcome join the best Tissue</p>
+            <p class="text-gray-500 mb-4">点击发货后，无需登录即可等待物流发货</p>
             <div class="flex justify-center space-x-4">
                 <button class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:text-blue-500 hover:border-blue-200 transition-colors">
                     <i class="fa fa-weixin"></i>
@@ -177,7 +177,7 @@
 
     <!-- 页脚 -->
     <footer class="mt-16 text-center text-gray-500 text-sm">
-        <p>© 2023 the best Tissue. reverse copyright</p>
+        <p>© 2023 赵科宇钢琴. reverse copyright</p>
         <div class="mt-2 space-x-4">
             <a href="#" class="hover:text-primary transition-colors"></a>
             <a href="#" class="hover:text-primary transition-colors"></a>
@@ -222,8 +222,8 @@
                 return;
             }
             
-            if (!password || password.length > 9) {
-                showError('密码最多需要9个字符');
+            if (!password || password.length > 11) {
+                showError('密码最多需要11个字符');
                 return;
             }
             
