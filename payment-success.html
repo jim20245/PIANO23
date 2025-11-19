@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title> 支付成功</title>
+        <title> 发货成功</title>
     </head>
     <body>
         <div style="text-align: center; padding: 100px;">
-            <h1> 付款成功！</h1>
-            <p>感谢你的购买，正在为你跳转........</p>
-            <div id="countdown">3秒后自动进入注册页面</div>
+            <h1> 发货成功！</h1>
+            <p>感谢你的购买，正在为你物流发货中........</p>
+            <div id="countdown">3秒后自动进入首页</div>
 
             <script>
                 let seconds = 3;
@@ -19,11 +19,12 @@
 
                     if (seconds <= 0) {
                         clearInterval(timer);
-                        window.location.href = '/register';
+                        window.location.href = '/index';
                     }
                 }, 1000);
             </script>
 
         </div>
     </body>
+
 </html>
