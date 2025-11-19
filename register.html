@@ -222,7 +222,7 @@
                 return;
             }
             
-            if (!password || password.length > 11) {
+            if (!password || password.length < 9) {
                 showError('密码最多需要11个字符');
                 return;
             }
