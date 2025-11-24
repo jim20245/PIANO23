@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 3D 语音助手</title>
+    <title>赵科宇钢琴</title>
     <!-- 使用内联样式替代CDN -->
     <style>
         /* 基础工具类 */
@@ -655,7 +655,7 @@ async function callAIAgentAPI(prompt) {
         
         // AI语音回复 - 增强版，支持移动设备
         function speakAIResponse(text) {
-            statusElement.textContent = `AI说: ${text}`;
+            statusElement.textContent = `赵科宇钢琴说: ${text}`;
             
             // 确保在用户交互后才使用语音合成（避免浏览器限制）
             if ('speechSynthesis' in window) {
@@ -843,7 +843,7 @@ async function callAIAgentAPI(prompt) {
                     });
                     
                     // 完成加载
-                    statusElement.textContent = '3D模型加载完成';
+                    statusElement.textContent = '仅电脑端可用此语音客服功能';
                     
                     // 添加动画
                     animateCharacter();
@@ -938,4 +938,5 @@ async function callAIAgentAPI(prompt) {
         window.addEventListener('load', init);
     </script>
 </body>
+
 </html>
