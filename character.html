@@ -543,11 +543,14 @@ async function callAIAgentAPI(prompt) {
                 // 更丰富的回复模板，添加更多内容
                 const responses = {
                     greetings: [
-                        '你好！很高兴见到你。',
-                        '嗨！有什么我可以帮你的吗？',
-                        '哈喽！我是你的3D AI助手。',
-                        '你好！我是小智，一个会说话的3D助手。',
-                        '嗨，很高兴与你交流！'
+                        '对于考级，我们的考级步骤是二级，三级，五级，八级，十级，这样可以从初级很好的过渡到高级。对于小朋友来说是一个比较能接受的合理教学安排。我们的考级教材主要是中国音乐学院，因为权威，证书在文化局可以查询。考级是每年两次寒假和暑假。',
+                        '比赛的话，我们目前最多的是央音展演，珠江凯撒堡，星海杯和学会杯等一些有名气的比赛。孩子穿上西服在聚光灯下为大家弹奏钢琴，极大的锻炼了小朋友们的台风礼仪和综合素质。比赛一般是一年组织两到三场。',
+                        '小朋友一般从四岁和五岁之间开始接触钢琴，不用担心孩子小学不会，因为老师有类似的实战经验，带过很多四五岁小朋友达到弹奏完整比赛曲目的能力。当然如果你是成人，那不论年龄都是可以学习钢琴的，陶冶情操。',
+                        '我们的收费是150元一次，收费方式很灵活方便，可以网上预约付费，付费的方式也可以十节一收，上一付一，支持花呗和信用卡，相当的现代化便捷化。网上加入课堂可以提交电话和地址，方便联系和后续沟通。',
+                        '我们可以上门授课，不收取任何上门的费用。对孩子学习时间紧迫提供了便捷。'
+                        '老师都是资深钢琴教师，有丰富的教学经验，持证上岗。拥有中国音乐学院教师认证证书，中国音乐学院钢琴十级证书，央音展演优秀指导老师奖，上海及苏州赛区的教学经历。家长可以放心并观看首页的证书资质',
+                        '联系我们可以注册登录，也可以加入课堂。发送邮箱到我们邮箱地址！联系方式首页小红圈客服可以看到！',
+                        '对于钢琴的指法，需要从小来严格培养正确的指型，记住一句话，错误的指型通常要花数倍的时间去纠正',
                     ],
                     introduction: [
                         '我是你的3D AI助手，你可以叫我小智。',
@@ -613,8 +616,8 @@ async function callAIAgentAPI(prompt) {
                 };
                 
                 // 关键词匹配
-                if (userInput.includes('你好') || userInput.includes('嗨') || userInput.includes('哈喽') || userInput.includes('早上好') || userInput.includes('晚上好') || 
-                    userInput.includes('嗨喽') || userInput.includes('你是谁') || userInput.includes('hi')) {
+                if (userInput.includes('考级') || userInput.includes('比赛') || userInput.includes('几岁') || userInput.includes('收费') || userInput.includes('上门') || 
+                    userInput.includes('资质') || userInput.includes('联系') || userInput.includes('指法')) {
                     resolve(randomChoice(responses.greetings));
                 } else if (userInput.includes('名字') || userInput.includes('叫什么') || userInput.includes('谁') || userInput.includes('什么名字')) {
                     resolve(randomChoice(responses.introduction));
@@ -641,7 +644,7 @@ async function callAIAgentAPI(prompt) {
                         console.log('生成的回复:', response);
                     } catch (e) {
                         console.error('生成回复时出错:', e);
-                        response = '我理解你的问题，虽然我还在学习中，但很高兴能和你交流！';
+                        response = '我是钢琴老师哦！请咨询和钢琴有关的问题！';
                     }
                     resolve(response);
                 }
@@ -940,3 +943,4 @@ async function callAIAgentAPI(prompt) {
 </body>
 
 </html>
+
