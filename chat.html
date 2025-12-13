@@ -60,6 +60,12 @@
             color: #333;
         }
         
+        .error-message {
+            background-color: #ffe6e6;
+            color: #cc0000;
+            border: 1px solid #ffcccc;
+        }
+        
         .chat-input-container {
             padding: 15px;
             display: flex;
@@ -111,9 +117,8 @@
     </div>
 
     <script>
-        // 配置
-        const API_BASE_URL = 'lovechopin-production-md6c.up.railway.app/chat';
-        const API_ENDPOINT = '/chat';
+        // ✅ 修复1：正确的API地址
+        const API_URL = 'https://lovechopin-production-md6c.up.railway.app/api/chat';
         
         // DOM元素
         const chatMessages = document.getElementById('chatMessages');
@@ -122,7 +127,7 @@
         
         // 初始化
         document.addEventListener('DOMContentLoaded', () => {
-            // 回车键发送消息（支持Shift+Enter换行）
+            // 回车键发送消息
             userInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -132,7 +137,22 @@
             
             // 自动调整输入框高度
             userInput.addEventListener('input', adjustTextareaHeight);
+            
+            // 测试服务器连接
+            testConnection();
         });
+        
+        // 测试服务器连接
+        async function testConnection() {
+            try {
+                const response = await fetch('https://lovechopin-production-md6c.up.railway.app/api/health');
+                const data = await response.json();
+                console.log('服务器连接正常:', data);
+            } catch (error) {
+                console.warn('服务器连接测试失败:', error);
+                addMessageToChat('⚠️ 服务器连接测试失败，但仍可使用', 'ai');
+            }
+        }
         
         // 调整文本框高度
         function adjustTextareaHeight() {
@@ -153,54 +173,84 @@
             userInput.value = '';
             adjustTextareaHeight();
             
+            // 禁用发送按钮
+            sendButton.disabled = true;
+            sendButton.textContent = '发送中...';
+            
             // 显示加载状态
-            const loadingMessage = addMessageToChat('正在分析...', 'ai', true);
+            const loadingMessage = addMessageToChat('AI正在思考...', 'ai', true);
             
             try {
-                // 发送请求到后端服务器
-                const response = await fetch(API_BASE_URL, {
+                // ✅ 修复2：发送正确的请求
+                const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
-                    body: JSON.stringify({ text: message })
+                    body: JSON.stringify({ 
+                        question: message  // ✅ 修复3：正确的参数名
+                    })
                 });
                 
-                const data = await response.json();
+                // 先获取原始文本
+                const rawText = await response.text();
+                console.log('服务器响应:', rawText.substring(0, 200));
+                
+                // 检查是否是HTML错误页面
+                if (rawText.includes('<html>') || rawText.includes('<!DOCTYPE')) {
+                    throw new Error('服务器返回HTML错误页面');
+                }
+                
+                // 解析JSON
+                const data = JSON.parse(rawText);
                 
                 // 移除加载状态
                 chatMessages.removeChild(loadingMessage);
                 
-                // 处理响应
-                if (data.success && data.data.items) {
-                    const result = data.data.items[0];
-                    const sentiment = result.sentiment === 0 ? '负面' : result.sentiment === 1 ? '中性' : '正面';
-                    const reply = `📊 情感分析结果：
-• 情感倾向：${sentiment}
-• 置信度：${(result.confidence * 100).toFixed(1)}%
-• 正情感概率：${(result.positive_prob * 100).toFixed(1)}%
-• 负情感概率：${(result.negative_prob * 100).toFixed(1)}%`;
-                    
-                    addMessageToChat(reply, 'ai');
+                // 显示AI回复
+                if (data.success) {
+                    addMessageToChat(data.answer || data.message || '收到你的消息', 'ai');
                 } else {
-                    addMessageToChat('分析失败：' + (data.error || '未知错误'), 'ai');
+                    addMessageToChat('AI回复失败: ' + (data.error || '未知错误'), 'error');
                 }
+                
             } catch (error) {
                 // 移除加载状态
-                chatMessages.removeChild(loadingMessage);
+                if (loadingMessage.parentNode) {
+                    chatMessages.removeChild(loadingMessage);
+                }
                 
-                // 显示错误信息
-                addMessageToChat('连接失败：' + error.message, 'ai');
+                // 显示智能降级回复
+                const fallbackReplies = [
+                    `关于"${message}"，这是个很好的问题！`,
+                    `我收到了你的消息："${message}"`,
+                    `思考中... 你问的是：${message}`,
+                    `让我想想怎么回答"${message}"这个问题`
+                ];
+                
+                const randomReply = fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)];
+                
+                addMessageToChat(randomReply + ' （服务器响应异常，使用本地模式）', 'ai');
+                addMessageToChat('⚠️ 连接错误: ' + error.message, 'error');
+                
+                console.error('请求失败:', error);
+                
+            } finally {
+                // 恢复发送按钮
+                sendButton.disabled = false;
+                sendButton.textContent = '发送';
             }
         }
         
         // 添加消息到聊天记录
         function addMessageToChat(text, sender, isLoading = false) {
             const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}-message`;
             
             if (isLoading) {
-                messageDiv.classList.add('loading');
+                messageDiv.className = 'message ai-message loading';
+            } else {
+                messageDiv.className = `message ${sender}-message`;
             }
             
             messageDiv.textContent = text;
@@ -213,8 +263,8 @@
         }
     </script>
 </body>
-
 </html>
+
 
 
 
