@@ -1,271 +1,269 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI聊天窗口</title>
+    <title>DeepSeek AI聊天</title>
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
         
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         
         .chat-container {
-            max-width: 500px;
-            margin: 50px auto;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            height: 85vh;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
         }
         
-        .chat-header {
-            background-color: #007bff;
+        .header {
+            background: #4f46e5;
             color: white;
-            padding: 15px;
+            padding: 20px;
             text-align: center;
-            font-size: 18px;
-            font-weight: bold;
         }
         
-        .chat-messages {
-            padding: 15px;
-            height: 300px;
+        .chat-area {
+            flex: 1;
             overflow-y: auto;
-            border-bottom: 1px solid #eee;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: #f8fafc;
         }
         
         .message {
-            margin-bottom: 15px;
-            padding: 10px 15px;
-            border-radius: 18px;
             max-width: 80%;
+            padding: 12px 18px;
+            border-radius: 18px;
             word-wrap: break-word;
+            line-height: 1.5;
         }
         
         .user-message {
-            background-color: #007bff;
+            background: #4f46e5;
             color: white;
-            margin-left: auto;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
         }
         
         .ai-message {
-            background-color: #f1f1f1;
+            background: white;
             color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
-        .error-message {
-            background-color: #ffe6e6;
-            color: #cc0000;
-            border: 1px solid #ffcccc;
-        }
-        
-        .chat-input-container {
-            padding: 15px;
+        .input-area {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
             display: flex;
             gap: 10px;
         }
         
-        #userInput {
+        #messageInput {
             flex: 1;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            font-size: 14px;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
             resize: none;
+            min-height: 50px;
+            max-height: 100px;
+        }
+        
+        #messageInput:focus {
+            outline: none;
+            border-color: #4f46e5;
         }
         
         #sendButton {
-            padding: 12px 20px;
-            background-color: #007bff;
+            background: #4f46e5;
             color: white;
             border: none;
-            border-radius: 20px;
+            padding: 0 25px;
+            border-radius: 10px;
+            font-size: 16px;
             cursor: pointer;
-            font-size: 14px;
-            white-space: nowrap;
+            transition: background 0.3s;
         }
         
         #sendButton:hover {
-            background-color: #0056b3;
+            background: #4338ca;
         }
         
-        .loading {
-            font-style: italic;
-            color: #666;
+        #sendButton:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+        
+        .typing {
+            display: flex;
+            gap: 5px;
+            padding: 12px 18px;
+            background: white;
+            border-radius: 18px;
+            align-self: flex-start;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: #4f46e5;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite;
+        }
+        
+        .dot:nth-child(2) { animation-delay: -0.2s; }
+        .dot:nth-child(3) { animation-delay: -0.4s; }
+        
+        @keyframes bounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
         }
     </style>
 </head>
 <body>
     <div class="chat-container">
-        <div class="chat-header">AI聊天助手</div>
-        
-        <div id="chatMessages" class="chat-messages">
-            <div class="message ai-message">你好！我是AI助手，有什么可以帮你分析的吗？</div>
+        <div class="header">
+            <h1>🤖 DeepSeek AI助手</h1>
+            <p>已连接到您的Railway服务器</p>
         </div>
         
-        <div class="chat-input-container">
-            <textarea id="userInput" placeholder="请输入内容..." rows="1"></textarea>
+        <div class="chat-area" id="chatArea">
+            <!-- 消息会动态添加到这里 -->
+            <div class="message ai-message">
+                你好！我是DeepSeek AI助手，有什么可以帮助您的？
+            </div>
+        </div>
+        
+        <div class="typing" id="typingIndicator">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+        
+        <div class="input-area">
+            <textarea 
+                id="messageInput" 
+                placeholder="输入您的问题..." 
+                rows="1"
+                oninput="autoResize(this)"
+            ></textarea>
             <button id="sendButton" onclick="sendMessage()">发送</button>
         </div>
     </div>
 
     <script>
-        // ✅ 修复1：正确的API地址
-        const API_URL = 'https://lovechopin-production-md6c.up.railway.app/api/chat';
-        
-        // DOM元素
-        const chatMessages = document.getElementById('chatMessages');
-        const userInput = document.getElementById('userInput');
+        // 获取DOM元素
+        const chatArea = document.getElementById('chatArea');
+        const messageInput = document.getElementById('messageInput');
         const sendButton = document.getElementById('sendButton');
+        const typingIndicator = document.getElementById('typingIndicator');
         
-        // 初始化
-        document.addEventListener('DOMContentLoaded', () => {
-            // 回车键发送消息
-            userInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
-            
-            // 自动调整输入框高度
-            userInput.addEventListener('input', adjustTextareaHeight);
-            
-            // 测试服务器连接
-            testConnection();
-        });
-        
-        // 测试服务器连接
-        async function testConnection() {
-            try {
-                const response = await fetch('https://lovechopin-production-md6c.up.railway.app/api/health');
-                const data = await response.json();
-                console.log('服务器连接正常:', data);
-            } catch (error) {
-                console.warn('服务器连接测试失败:', error);
-                addMessageToChat('⚠️ 服务器连接测试失败，但仍可使用', 'ai');
-            }
-        }
-        
-        // 调整文本框高度
-        function adjustTextareaHeight() {
-            userInput.style.height = 'auto';
-            userInput.style.height = Math.min(userInput.scrollHeight, 100) + 'px';
+        // 自动调整输入框高度
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 100) + 'px';
         }
         
         // 发送消息
         async function sendMessage() {
-            const message = userInput.value.trim();
-            
+            const message = messageInput.value.trim();
             if (!message) return;
-            
-            // 添加用户消息到聊天记录
-            addMessageToChat(message, 'user');
-            
-            // 清空输入框
-            userInput.value = '';
-            adjustTextareaHeight();
             
             // 禁用发送按钮
             sendButton.disabled = true;
-            sendButton.textContent = '发送中...';
             
-            // 显示加载状态
-            const loadingMessage = addMessageToChat('AI正在思考...', 'ai', true);
+            // 显示用户消息
+            addMessage(message, 'user');
+            messageInput.value = '';
+            autoResize(messageInput);
+            
+            // 显示正在输入指示器
+            typingIndicator.style.display = 'flex';
             
             try {
-                // ✅ 修复2：发送正确的请求
-                const response = await fetch(API_URL, {
+                // 发送到您的Railway后端
+                // 注意：这里需要改成您的Railway URL
+                const response = await fetch('/chat', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Accept': 'application/json'
                     },
-                    body: JSON.stringify({ 
-                        text: message  // ✅ 修复3：正确的参数名
-                    })
+                    body: JSON.stringify({ message: message })
                 });
                 
-                // 先获取原始文本
-                const rawText = await response.text();
-                console.log('服务器响应:', rawText.substring(0, 200));
-                
-                // 检查是否是HTML错误页面
-                if (rawText.includes('<html>') || rawText.includes('<!DOCTYPE')) {
-                    throw new Error('服务器返回HTML错误页面');
+                if (!response.ok) {
+                    throw new Error(`HTTP错误: ${response.status}`);
                 }
                 
-                // 解析JSON
-                const data = JSON.parse(rawText);
+                const data = await response.json();
                 
-                // 移除加载状态
-                chatMessages.removeChild(loadingMessage);
+                // 隐藏正在输入指示器
+                typingIndicator.style.display = 'none';
                 
                 // 显示AI回复
-                if (data.success) {
-                    addMessageToChat(data.answer || data.message || '收到你的消息', 'ai');
-                } else {
-                    addMessageToChat('AI回复失败: ' + (data.error || '未知错误'), 'error');
-                }
+                addMessage(data.reply, 'ai');
                 
             } catch (error) {
-                // 移除加载状态
-                if (loadingMessage.parentNode) {
-                    chatMessages.removeChild(loadingMessage);
-                }
-                
-                // 显示智能降级回复
-                const fallbackReplies = [
-                    `关于"${message}"，这是个很好的问题！`,
-                    `我收到了你的消息："${message}"`,
-                    `思考中... 你问的是：${message}`,
-                    `让我想想怎么回答"${message}"这个问题`
-                ];
-                
-                const randomReply = fallbackReplies[Math.floor(Math.random() * fallbackReplies.length)];
-                
-                addMessageToChat(randomReply + ' （服务器响应异常，使用本地模式）', 'ai');
-                addMessageToChat('⚠️ 连接错误: ' + error.message, 'error');
-                
-                console.error('请求失败:', error);
-                
+                console.error('发送消息失败:', error);
+                typingIndicator.style.display = 'none';
+                addMessage('抱歉，服务暂时不可用。请检查后端连接。', 'ai');
             } finally {
-                // 恢复发送按钮
                 sendButton.disabled = false;
-                sendButton.textContent = '发送';
+                messageInput.focus();
             }
         }
         
-        // 添加消息到聊天记录
-        function addMessageToChat(text, sender, isLoading = false) {
+        // 添加消息到聊天区域
+        function addMessage(text, sender) {
             const messageDiv = document.createElement('div');
-            
-            if (isLoading) {
-                messageDiv.className = 'message ai-message loading';
-            } else {
-                messageDiv.className = `message ${sender}-message`;
-            }
-            
+            messageDiv.className = `message ${sender}-message`;
             messageDiv.textContent = text;
-            chatMessages.appendChild(messageDiv);
+            chatArea.appendChild(messageDiv);
             
             // 滚动到底部
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            
-            return messageDiv;
+            chatArea.scrollTop = chatArea.scrollHeight;
         }
+        
+        // 回车发送消息
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        
+        // 页面加载后自动聚焦输入框
+        window.onload = () => {
+            messageInput.focus();
+        };
+        
+        // 如果需要连接到不同的后端URL，修改这里
+        // const BACKEND_URL = 'https://你的项目.railway.app';
     </script>
 </body>
 </html>
-
-
-
-
-
