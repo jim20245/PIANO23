@@ -217,8 +217,8 @@
             const confirmPassword = document.getElementById('confirmPassword').value;
             
             // 前端验证
-            if (!username || username.length < 9) {
-                showError('用户名最少需要9个字符');
+            if (!username || username.length < 2) {
+                showError('用户名最少需要2个字符');
                 return;
             }
             
