@@ -120,12 +120,12 @@
                 clearInterval(countdownInterval);
                 // 更新页面状态为支付完成
                 statusTitle.textContent = '✅ 支付已完成';
-                statusMessage.textContent = '您的支付已成功处理，请继续完成注册流程';
+                statusMessage.textContent = '您的支付已成功处理，请继续完成预约流程';
                 countdownElement.textContent = '支付状态已确认';
                 countdownElement.style.color = '#198754';
                 
                 // 更新提示框内容
-                successNote.innerHTML = '<p class="mb-0 text-sm text-success font-weight-bold">✅ 支付已成功完成，请点击下方按钮继续注册流程</p>';
+                successNote.innerHTML = '<p class="mb-0 text-sm text-success font-weight-bold">✅ 支付已成功完成，请点击下方按钮完成线上预约</p>';
                 successNote.style.backgroundColor = '#d1e7dd';
                 successNote.style.borderColor = '#198754';
                 
@@ -146,7 +146,7 @@
                 }, 300);
             } else {
                 // 未到时间时显示提示
-                alert('请等待支付处理完成后再继续注册流程');
+                alert('请等待支付处理完成后再继续预约流程');
             }
         });
     </script>
