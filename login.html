@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Login</title>
+    <title>卡普拉钢琴</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <script>
@@ -49,12 +49,12 @@
     <nav class="w-full max-w-7xl flex justify-between items-center px-4 py-3 mb-8">
         <div class="flex items-center space-x-2">
             <i class="fa fa-music text-primary text-2xl"></i>
-            <span class="font-bold text-xl text-neutral">Tissue<span class="text-primary">Hub</span></span>
+            <span class="font-bold text-xl text-neutral">卡普拉<span class="text-primary">钢琴</span></span>
         </div>
         <div class="hidden md:flex space-x-8 items-center">
             
-            <a href="login.html" class="text-primary font-medium">Login</a>
-            <a href="payment-success.html" class="text-gray-600 hover:text-primary transition-colors">无需填写再次点击确认发货</a>
+            <a href="login.html" class="text-primary font-medium">登录</a>
+            <a href="payment-success.html" class="text-gray-600 hover:text-primary transition-colors">已经发送手机号客户点击此处直接发货</a>
         </div>
         <button class="md:hidden text-gray-600">
             <i class="fa fa-bars text-xl"></i>
@@ -65,14 +65,14 @@
     <main class="w-full max-w-md">
         <div class="card">
             <div class="text-center mb-8">
-                <h1 class="text-2xl md:text-3xl font-bold text-neutral mb-2">welcome</h1>
-                <p class="text-gray-500">please login with your E-mail</p>
+                <h1 class="text-2xl md:text-3xl font-bold text-neutral mb-2">卡普拉钢琴</h1>
+                <p class="text-gray-500">专业钢琴家教平台</p>
             </div>
 
             <!-- 登录表单 -->
             <form id="loginForm" class="space-y-5">
                 <div>
-                    <label for="username" class="form-label">User</label>
+                    <label for="username" class="form-label">用户名</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                             <i class="fa fa-user"></i>
@@ -83,13 +83,13 @@
                             name="username" 
                             required
                             class="w-full pl-10 py-2.5 border border-gray-300 rounded-lg input-focus"
-                            placeholder="input E-mail"
+                            placeholder="输入 信息（姓名）"
                         >
                     </div>
                 </div>
                 
                 <div>
-                    <label for="password" class="form-label">password</label>
+                    <label for="password" class="form-label">手机号</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                             <i class="fa fa-lock"></i>
@@ -100,7 +100,7 @@
                             name="password" 
                             required
                             class="w-full pl-10 py-2.5 border border-gray-300 rounded-lg input-focus"
-                            placeholder="input password"
+                            placeholder="输入 （手机号）"
                         >
                         <button 
                             type="button" 
@@ -140,7 +140,7 @@
                     id="loginButton" 
                     class="btn-primary w-full flex justify-center items-center"
                 >
-                    <span id="buttonText">Login</span>
+                    <span id="buttonText">发送</span>
                     <span id="loadingIndicator" class="hidden ml-2">
                         <i class="fa fa-spinner fa-spin"></i>
                     </span>
@@ -149,14 +149,14 @@
 
             <div class="mt-6 text-center">
                 <p class="text-gray-600">
-                    <a href="payment-success.html" class="text-primary font-medium hover:underline">已填写收货信息客户点击此处发货</a>
+                    <a href="payment-success.html" class="text-primary font-medium hover:underline">已经发送手机号客户点击此处直接发货</a>
                 </p>
             </div>
         </div>
 
         <!-- 社交媒体登录选项 -->
         <div class="mt-6 text-center">
-            <p class="text-gray-500 mb-4">welcome join us </p>
+            <p class="text-gray-500 mb-4">卡普拉钢琴 </p>
             <div class="flex justify-center space-x-4">
                 <button class="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:text-blue-500 hover:border-blue-200 transition-colors">
                     <i class="fa fa-weixin"></i>
@@ -173,7 +173,7 @@
 
     <!-- 页脚 -->
     <footer class="mt-16 text-center text-gray-500 text-sm">
-        <p>© 2023 The best Tissue. reserve copyright</p>
+        <p>© 2023 卡普拉钢琴. reserve copyright</p>
         <div class="mt-2 space-x-4">
             <a href="#" class="hover:text-primary transition-colors"></a>
             <a href="#" class="hover:text-primary transition-colors"></a>
@@ -231,7 +231,7 @@
             const loadingIndicator = document.getElementById('loadingIndicator');
             
             loginButton.disabled = true;
-            buttonText.textContent = '登录中';
+            buttonText.textContent = '发送中';
             loadingIndicator.classList.remove('hidden');
             
             try {
