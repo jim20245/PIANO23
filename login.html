@@ -263,7 +263,7 @@
                     }
                     
                     // 显示成功消息
-                    showSuccess('登录成功！正在跳转到首页...');
+                    showSuccess('发送成功！正在跳转到首页...');
                     
                     // 跳转到首页
                     setTimeout(() => {
@@ -271,7 +271,7 @@
                     }, 1500);
                 } else {
                     // 登录失败
-                    showError(result.message || '登录失败，请检查用户名和密码');
+                    showError(result.message || '发送失败，请检查用户名和手机号');
                 }
             } catch (error) {
                 // 网络错误
@@ -286,7 +286,7 @@
             } finally {
                 // 恢复按钮状态
                 loginButton.disabled = false;
-                buttonText.textContent = '登录';
+                buttonText.textContent = '发送';
                 loadingIndicator.classList.add('hidden');
             }
         });
