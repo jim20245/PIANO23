@@ -401,7 +401,7 @@ class AIChat {
         }
 
         // 默认回复
-        return 'Thanks for your choice,if you have any question please contact:18064908797@163.com';
+        return 'Thanks for your choice,if you have any question please contact:120.48.71.34:18789';
     }
 
     toggleMinimize() {
@@ -438,6 +438,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1000);
 
 });
+
 
 
 
