@@ -1,20 +1,13 @@
 {
-    "name": "backend",
+    "name": "dino-controller",
     "version": "1.0.0",
-    "description": "我的第一个项目",
-    "main": "server.js",
+    "description": "树莓派恐龙控制器",
+    "main": "main.js",
     "scripts": {
-        "start": "node server.js"
+        "start": "sudo node main.js"
     },
     "dependencies": {
-        "express": "5.1.0"
         
-        
+        "ws": "^8.16.0"
     }
-
 }
-
-
-
-
-
