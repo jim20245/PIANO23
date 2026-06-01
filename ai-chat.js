@@ -401,7 +401,7 @@ class AIChat {
         }
 
         // 默认回复
-        return 'Thanks for your choice,if you have any question please contact:120.48.71.34:18789';
+        return '感谢你的提问，任何技术需要请加微信:jamydino';
     }
 
     toggleMinimize() {
