@@ -2,60 +2,94 @@
 #!/usr/bin/env python3
 import sys
 import time
-from gpiozero import OutputDevice
+from adafruit_servokit import ServoKit
+
+kit = ServoKit(channels=16)
+
+for ch in range(16):
+
+    kit.servo[ch].set_pulse_width_range(500, 2500)
+    kit.servo[ch].actuation_range = 180
 
 # 电机引脚配置
-MOTOR_PINS = {
-    'm1': 18,
-    'm2': 19,
-    'm3': 20,
-    'm4': 21,
+SERVO_CHANNELS = {
+    'm1': 0,
+    'tail': 1,
+    
+    
 
 }
 
-#初始化 GPIO
-motors = {}
-for name, pin in MOTOR_PINS.items():
-    motors[name] = OutputDevice(pin, initial_value=False)
+
     
 
-    def control_motor(motor_name, action):
-        if motor_name not in motors:
+def set_angle(motor_name, angle):
+        if motor_name not in SERVO_CHANNELS:
             print(f"Error：motor {motor_name} not found")
             return False
-
-        motor = motors[motor_name]
-
-        if action == 'on':
-            motor.on()
-            print(f"{motor_name} ON")
-        elif action == 'off':
-            motor.off()
-            print(f"{motor_name} OFF")
-        elif action == 'pulse':
-            motor.on()
-            print(f"{motor_name} PULSE START")
-            time.sleep(0.5)
-            motor.off()
-            print(f"{motor_name} PULSE END")
-        else:
-            print(f"Error: unknown action {action}")
-            return False
-
+        ch = SERVO_CHANNELS[motor_name]
+        kit.servo[ch].angle = angle
+        print(f"{motor_name} 转到 {angle} 度")
         return True
 
-    def cleanup():
-        for motor in motors.values():
-            motor.off()
-            motor.close()
-        print("GPIO cleaned up")
+def stop(motor_name):
 
-    if __name__ == "__main__":
-        if len(sys.argv) >= 3:
-            control_motor(sys.argv[1], sys.argv[2])
+            if motor_name not in SERVO_CHANNELS:
+                return False
+            ch = SERVO_CHANNELS[motor_name]
+            kit.servo[ch].angle = None
+            print(f"{motor_name} 停止")
+            return True
 
-    #如果传入 cleanup 参数， 则清理 GPIO
-    if len(sys.argv) > 1 and sys.argv[1] == 'cleanup':
-        cleanup()
+def cleanup():
+            for ch in SERVO_CHANNELS.values():
+                kit.servo[ch].angle = None
+            
+                print("GPIO cleaned up")
+
+def bite():
+    print("执行咬合")
+    set_angle('m1', 60)
+    time.sleep(0.5)
+    set_angle('m1', 0)
+    time.sleep(0.3)
+
+def wag_tail(times=3, delay=0.15):
+    print("执行摆尾")
+    LEFT = 30
+    RIGHT = 150
+    CENTER = 90
+    for _ in range(times):
+          set_angle('tail', LEFT)
+          time.sleep(delay)
+          set_angle('tail', RIGHT)
+          time.sleep(delay)
+    set_angle('tail', CENTER)
+    time.sleep(0.3)
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+          print("用法:")
+          print(" python motor.py <motor> angle <角度>")
+          print(" python motor.py <motor> stop")
+          print(" python motor.py start")
+          print(" python motor.py tail")
+          print(" python motor.py cleanup")
+          sys.exit(0)
+
+    cmd = sys.argv[1]
+
+    if cmd == 'start':
+      bite()
+    elif cmd == 'tail':
+      wag_tail()
+    elif len(sys.argv) >= 4 and sys.argv[2] == 'angle':
+      set_angle(cmd, int(sys.argv[3]))
+    elif len(sys.argv) >= 3 and sys.argv[2] == 'stop':
+      stop(cmd)
+    elif cmd == 'cleanup':
+      cleanup()
+    else:
+      print(f"未知命令或参数不足: {sys.argv[1:]}")
     
 

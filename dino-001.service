@@ -1,0 +1,13 @@
+[Unit]
+Description=Dino-001 WebSocket Client
+After=network.target
+
+[Service]
+WorkingDirectory=/home/pi/dino 
+ExecStart=/usr/bin/node main.js
+Restart=always
+RestartSec=10
+User=pi
+
+[Install]
+WantedBy=multi-user.target 

@@ -1,7 +1,7 @@
 {
     "name": "dino-controller",
     "version": "1.0.0",
-    "description": "树莓派恐龙控制器",
+    "description": "树莓派恐龙控制器  -公网AI控制内网舵机",
     "main": "main.js",
     "scripts": {
         "start": "sudo node main.js"

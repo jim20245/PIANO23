@@ -21,6 +21,12 @@ function pulse(motorName, duration = 500) {
     return { status: 'pulse', motor: motorName, duration };
 }
 
+function angle(motorName, value) {
+    exec(`python3 ${PYTHON_SCRIPT} ${motorName} angle ${value}`);
+    console.log(`${motorName} 转到 ${value} 度`);
+    return { status: 'angle', motor: motorName, value: value };
+}
+
 const motors = {
     m1: 18,
     m2: 19,
@@ -28,6 +34,6 @@ const motors = {
     m4: 21
 };
 
-module.exports = { on, off, pulse, motors };
+module.exports = { on, off, pulse, angle, motors };
 
 

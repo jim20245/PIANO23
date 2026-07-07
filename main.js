@@ -1,11 +1,13 @@
 const WebSocket = require('ws');
-const motor = require('./motor.js');
+const { exec } = require('child_process');
 
-const SERVER_URL = 'wss://lovechopin-production-md6c.up.railway.app';
+const SERVER_URL = 'wss://www.lovechopin.com';
 const DEVICE_ID = 'dino-001';
 
 let ws = null;
 let heartbeatInterval = null;
+let autoSwingInterval = null;
+let currentAngle = 0;
 
 function connect() {
     console.log(`[${new Date().toISOString()}] 正在连接服务器....`);
@@ -34,46 +36,105 @@ function connect() {
     ws.on('message', (data) => {
         try{
             const msg = JSON.parse(data);
-            console.log(`[${new Date().toISOString()}] 收到指令：`, msg);
+            console.log(`[RAW] 收到: ${JSON.stringify(msg)}`);
 
-            if (msg.type === 'command') {
-                handleCommand(msg);
+            if (msg.action === 'angle') {
+                
+                const motorName = msg.motor || 'm1';
+                const angle = msg.value !== undefined ? msg.value : 90;
+                executeMotor(motorName, angle);
+                return;
+                
+              
+            } 
+
+            if (msg.action === 'tail') {
+                console.log(`[TAIL] 执行摆尾动作`);
+                const cmd = `cd /home/pi/dino && /home/pi/dino/venv/bin/python motor.py tail`;
+                exec(cmd, (error, stdout, stderr) => {
+                    if (error) console.error(`[ERROR] ${error}`);
+                    if (stdout) console.log(`[OUT] ${stdout.trim()}`);
+                    if (stderr) console.error(`[ERR] ${stderr}`);
+                });
+                return;
             }
+
+        
+
+            if (msg.action === 'start') {
+                startAutoSwing();
+                return;
+             
+            }
+
+            if (msg.action === 'stop') {
+                stopAutoSwing();
+                return;
+                
+            }
+
+            if (msg.action === 'range') {
+                startAutoSwing(msg.min || 0, msg.max || 180, (msg.interval || 2) * 1000);
+                return;
+            }
+            
         } catch (e)  {
-            console.error(' 指令解析失败:', e);
+            console.error('解析错误:', e);
+            
         }
     });
 
     
 
     ws.on('error', (err) => {
-        console.error(`[${new Date().toISOString()}] WebSocket 错误：`, error);
+        console.error(`WebSocket 错误：`, err);
         
     });
 
     ws.on('close', () => {
-        console.log(`[${new Date().toISOString()}] 连接断开，5秒后重连...`);
+        console.log(`连接断开，5秒后重连...`);
         if (heartbeatInterval) clearInterval(heartbeatInterval);
+        if (autoSwingInterval) clearInterval(autoSwingInterval);
         setTimeout(connect, 5000);
     });
 }
 
-function handleCommand(command) {
-    const { action, motor: motorName, duration } = command;
+function executeMotor(motorName, angle) {
+    const cmd = `cd /home/pi/dino && /home/pi/dino/venv/bin/python motor.py ${motorName} angle ${angle}`;
+    console.log(`[EXEC] 执行: ${cmd}`);
+    exec(cmd, (error, stdout, stderr) => {
+        if (error) console.error(`[ERROR] ${error}`);
+        if (stdout) console.log(`[OUT] ${stdout.trim()}`);
+        if (stderr) console.error('[ERR] ${stderr}');
+    });
+}
 
-    switch (action) {
-        case 'on':
-            motor.on(motorName);
-            break;
-        case 'off':
-            motor.off(motorName);
-        case 'pulse':
-            motor.pulse(motorName, duration || 500);
-            break;
-        default:
-            console.log(` 未知指令: ${action}`);
+function startAutoSwing(minAngle = 0, maxAngle = 180, intervalMs = 2000) {
+    if (autoSwingInterval) clearInterval(autoSwingInterval);
+
+    let current = minAngle;
+    console.log(`[AUTO] 开始自动摇摆: ${minAngle} <_> ${maxAngle}, 间隔 ${intervalMs/1000}秒`);
+
+    autoSwingInterval = setInterval(() => {
+        executeMotor('m1', current);
+
+        if (current === minAngle) {
+            current = maxAngle;
+        } else {
+            current = minAngle;
+        }
+    }, intervalMs);
+}
+
+function stopAutoSwing() {
+    if (autoSwingInterval) {
+        clearInterval(autoSwingInterval);
+        autoSwingInterval = null;
+        console.log(`[AUTO] 停止自动摆动`);
     }
-}  
+}
+
+
 
 console.log(`[${new Date().toISOString()}] 恐龙控制器启动`);
 console.log(`设备 ID: ${DEVICE_ID}`);
@@ -82,12 +143,12 @@ connect();
 process.on('SIGINT', () => {
     console.log('\n正在退出...');
     if (heartbeatInterval) clearInterval(heartbeatInterval);
+    if (autoSwingInterval) clearInterval(autoSwingInterval);
     if (ws) ws.close();
 
-    const { exec } = require('child_process');
-    exec('python3 /home/pi/dino/motor.py cleanup');
+  
 
-    setTimeout(() => {
-        process.exit(0);
-    }, 500);
+    setTimeout(() => process.exit(0), 500);
+       
+    
 });
